@@ -1,6 +1,8 @@
 # prompter.vim
 vim as a perfect large language models prompts playground
 
+![alt text](screens/screenshot.1.png)
+
 Transform the Vim editor into an optimal prompt engineering environment,
 effectively replacing proprietary providers Large Language Models (LLMs) web playgrounds like:
 
