@@ -27,7 +27,7 @@ import sys
 sys.path.append(vim.eval('s:python_path'))
 from openai_setup import CHAT_COMPLETION_MODE
 from vim_utils import echo, error
-import utils
+from utils import model_settings
 
 echo(utils.help())
 echo('\nModel:')
@@ -39,11 +39,10 @@ try:
     temperature = float(vim.eval('g:temperature'))
     max_tokens = int(vim.eval('g:max_tokens'))
     stop = vim.eval('g:stop')
-
-    echo(model_settings(llm_provider, model_or_deployment, completion_mode, temperature, max_tokens, stop))
-
 except:
     error('prompter.vim setup not done! Run in command line :PrompterSetup')
+
+echo(model_settings(llm_provider, model_or_deployment, completion_mode, temperature, max_tokens, stop))
 EOF
 endfunction
 

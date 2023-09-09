@@ -1,5 +1,5 @@
 # prompter.vim
-![alt text](screens/screenshot.1.png)
+Use vim as a tool for efficiently design, debug and save your LLMs prompts!
 
 Transform the Vim editor into an efficient prompt engineering environment,
 effectively replacing proprietary providers Large Language Models (LLMs) web playgrounds like:
@@ -8,7 +8,7 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
-Use vim as a tool for efficiently design, debug and save your LLMs prompts!
+![alt text](screens/screenshot.1.png)
 
 
 ## Features
@@ -51,23 +51,26 @@ Undertaking all of this with web playgrounds is a cumbersome and error-prone pro
 ## Completion modes
 There are two common "completion modes" foreseen in OpenAI or similar current LLMs:
 
-- **Text completion**
+- **`text` completion**
 
-  Completion mode set as "text" means that LLM completes 
+  Completion mode set as `text` means that LLM completes,
   the given context window prompt text with a completion text (text in -> text out).
   An example of such a model setting is the `text-da-vinci-003` OpenAI model.
   To use a text completion mode, the model must support that mode trough specific API.
   
-- **Chat completion**
-  Completion mode set as "chat" means that LLM s fine-tuned for "chat".  
-  The context window prompt is in fact made by three sections: a "system prompt" and a list of user and assistant messages.
+- **`chat` completion**
+
+  Completion mode set as `chat` means that LLM s fine-tuned for chat "roles" 
+  (user say, assistant say, ...).  
+  The context window prompt is in fact made by 
+  a "system prompt" and a list of user and assistant messages.
   An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
   To use a chat completion mode, the model must support that mode, trough specific API.
 
-💡 Prompter.vim plugin is conceived to work as a text mode fast prototyping playground, 
+💡 Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 avoiding the complications of the chat roles. 
-So a model that works only in chat mode (as the `gpt3.5-turbo`) is faked as a text completion model,
-just inserting the prompt text as "system" role.
+So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "faked" 
+to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
 
 
 ## Install
@@ -78,17 +81,20 @@ This pluguin is made in Python3. Check if your vim installation support Python3
 vim --version | grep "+python3"
 ```
 
-Install the plugin using your preferred plugin manager, e.g. using vim-plug, in your `.vimrc` file:
+Install the plugin using your preferred plugin manager, e.g. using vim-plug plug-in manager, 
+insert in your `.vimrc` file:
 ```viml
-  Plug 'solyarisoftware/prompter.vim'
+Plug 'solyarisoftware/prompter.vim'
 ```
 
 
 ## Environment Setup 
 
 ### OpenAI Provider
+In the example here below, you set the secret API key, the completion mode as `chat` and you specify the model to be used
+
 ```bash
-# MANDATORY VARIABLES: 
+# MANDATORY SETTINGS: 
 # WARNING: KEEP YOU API KEY SECRETS.
 export AZURE_OPENAI_API_KEY="YOUR OPENAI API KEY"
 
@@ -97,7 +103,7 @@ export OPENAI_COMPLETION_MODE="chat"
 export OPENAI_MODEL_NAME_CHAT_COMPLETION="gpt-3.5-turbo"
 export OPENAI_MODEL_TEXT_COMPLETION="text-davinci-003"
 
-# OPTIONAL
+# OPTIONAL SETTINGS
 # specify the LLM provider. Default is just "openai"
 export LLM_PROVIDER="openai"
 
@@ -107,11 +113,12 @@ export OPENAI_STOP=""
 ```
 
 ### Azure OpenAI Provider
+In the example here below, you set the secret API key, the completion mode as `chat` and you specify the model to be used.
+
 ```bash
 # MANDATORY VARIABLES: 
 # WARNING: KEEP YOU API KEY SECRETS.
 
-# specify the LLM provider
 export LLM_PROVIDER="azure"
 export AZURE_OPENAI_API_VERSION="2023-05-15"
 
@@ -123,13 +130,14 @@ export OPENAI_COMPLETION_MODE="chat"
 export AZURE_DEPLOYMENT_NAME_CHAT_COMPLETION="gpt-35-turbo"
 export AZURE_DEPLOYMENT_NAME_TEXT_COMPLETION="text-davinci-003"
 
+# OPTIONAL SETTINGS
 export OPENAI_TEMPERATURE=0.7
 export OPENAI_MAX_TOKENS=100
 export OPENAI_STOP="a: u:"
 ```
 
 
-## `:PrompterSetup`
+## `:PrompterSetup` command
 When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
 ```viml
 :PrompterSetup
@@ -140,7 +148,7 @@ chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
 ```
 
 
-## `:PrompterComplete`
+## `:PrompterComplete` command
 Edit your prompt on a vim windows, and to run the LLM completion just  
 ```viml
 :PrompterComplete
@@ -165,7 +173,7 @@ map <F12> :PrompterComplete<CR>
 ```
 
 
-## `:PrompterInfo`
+## `:PrompterInfo` command
 Reports the current plugin version, the list of plugin commands, the current model settings.
 
 
@@ -202,28 +210,30 @@ Reports the current plugin version, the list of plugin commands, the current mod
 
 
 ## Dialogues as part of the text prompt
-💡 A technique I use to prototype dialog prompts, is to insert a dialog turns block as in this example:
+💡 A technique I'm using to prototype dialog prompts, is to insert a dialog turns block 
+as in the follwing example, where the dialog block terminates with the "stop sequence" (e.g. `a:`)
+triggering LLM to complete the assistant role:
 
 ```
+TASK
 You (a:) are a customer care assistant and you are assisting a user (u:).
+...
+...
 
 DIALOG
-a: Ciao! Come posso aiutarti oggi?
-u: voglio aprire una segnalazione
-a: Fantastico! Per prima cosa, potresti darmi una descrizione dettagliata del problema che stai riscontrando?
-u: non si accedene il monitor del computer
-a: Grazie per la descrizione. Qual è il nome o il modello del prodotto o del sistema con cui stai riscontrando problemi?
-u: non riesco a leggere la marca. E' il monitor del pc aziendale.
-a: Grazie per l'informazione. Qual è il tuo metodo preferito di contatto?
-u: via mail a g.angelotti@gmail.com
-a: Grazie. Per favore, conferma l'indirizzo email fornito: g.angelotti@gmail.com
-u: è corretto
-a: Ottimo. Ecco un riepilogo delle informazioni fornite:
-...
-
-TASK
-...
+a: Hello! How can I assist you today?
+u: I want to open a report.
+a: Fantastic! First, could you provide me with a detailed description of the issue you're experiencing?
+u: The computer monitor won't turn on.
+a: Thank you for the description. What is the name or model of the product or system you're having trouble with?
+u: I can't read the brand. It's the company's PC monitor.
+a: Thank you for the information. What is your preferred method of contact?
+u: via email at g.angelotti@gmail.com
+a: Thank you. Please confirm the provided email address: g.angelotti@gmail.com
+u: that's correct!
+a:
 ```
+
 In the above case these vim comand could be useful:
 
 - Add a new line beginning with `a: `, just pressing  the key `F9`:
@@ -249,11 +259,16 @@ In the above case these vim comand could be useful:
   :set wrap linebreak nolist
   ```
 
+- How to see what mapping for a particular key, e.g. `F12`:
+  ```viml
+  :map <F12>
+  ```
+
 - mark placeholders
   ```viml
-  syntax region CustomBraces start=/{/ end=/}/
-  highlight link CustomBraces Statement
-  au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
+      syntax region CustomBraces start=/{/ end=/}/
+      highlight link CustomBraces Statement
+      au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
   ```
 
 
@@ -261,7 +276,7 @@ In the above case these vim comand could be useful:
 
 - **Support template prompts**
 
-  Things become interesting when you design "template prompts"
+  You are designing "template prompts"
   comprised of various parts that can be dynamically constructed at run-time.
   Consider, for instance, that you wish to prototype a "template prompt"
   containing placeholder variables, that are references to certain variables
@@ -289,16 +304,15 @@ In the above case these vim comand could be useful:
 
 - **Use LiteLLM as a LLM provider abstraction layer**
 
-  https://github.com/BerriAI/litellm is a lightweight package to simplify LLM API calls 
-  with Azure, OpenAI, Cohere, Anthropic, etc.
-
   So far prompter.vim support interface with Azure OpenAI or OpenAI native providers.
-  LiteLLM could be a better option to use openai APis.
+
+  [LiteLLM](https://github.com/BerriAI/litellm) could be a better option to use openai API directly.
+  It is a lightweight package to simplify LLM API calls with Azure, OpenAI, Cohere, Anthropic, etc.
 
 
 ## Similar projects
 
-- https://github.com/madox2/vim-ai
+- [vim-ai](https://github.com/madox2/vim-ai)
 
 
 ## How to contribute
