@@ -26,11 +26,11 @@ import vim
 import sys
 sys.path.append(vim.eval('s:python_path'))
 from openai_setup import CHAT_COMPLETION_MODE
-from vim_utils import info, error
+from vim_utils import echo, error
 import utils
 
-info(utils.help())
-info('\nModel:')
+echo(utils.help())
+echo('\nModel:')
 
 try:
     llm_provider = vim.eval('g:llm_provider')
@@ -40,30 +40,10 @@ try:
     max_tokens = int(vim.eval('g:max_tokens'))
     stop = vim.eval('g:stop')
 
-    if completion_mode == CHAT_COMPLETION_MODE:
-        info(
-            f'chat completion model: {llm_provider}/{model_or_deployment} '
-            f'(temperature: {temperature} max_tokens: {max_tokens}, stop: {stop})'
-        )
-    else:
-        info(
-            f'text completion model: {llm_provider}/{model_or_deployment} '
-            f'(temperature: {temperature} max_tokens: {max_tokens}, stop: {stop})'
-        )
+    echo(model_settings(llm_provider, model_or_deployment, completion_mode, temperature, max_tokens, stop))
 
 except:
     error('prompter.vim setup not done! Run in command line :PrompterSetup')
-EOF
-endfunction
-
-function! Version()
-python3 << EOF
-import vim
-import sys
-sys.path.append(vim.eval('s:python_path'))
-import utils
-
-utils.version()
 EOF
 endfunction
 
@@ -96,16 +76,24 @@ if global_defaults:
 
   if global_defaults.completion_mode == CHAT_COMPLETION_MODE:
       vim.command(f'let g:model_or_deployment = "{global_defaults.model_chat_completion}"')
-      info(
-          f'chat completion model: {global_defaults.llm_provider}/{global_defaults.model_chat_completion} '
-          f'(temperature: {global_defaults.temperature} max_tokens: {global_defaults.max_tokens}, stop: {global_defaults.stop})'
+      info_text = (
+          f'Model: {global_defaults.llm_provider}/{global_defaults.model_chat_completion} '
+          f'completion mode: {global_defaults.completion_mode} '
+          f'temperature: {global_defaults.temperature} max_tokens: {global_defaults.max_tokens}'
       )
+      if global_defaults.stop:
+          info_text += f' stop: {global_defaults.stop}'
+      info(info_text)
   else:
       vim.command(f'let g:model_or_deployment = "{global_defaults.model_text_completion}"')
-      info(
-          f'text completion model: {global_defaults.llm_provider}/{global_defaults.model_text_completion} '
-          f'(temperature: {global_defaults.temperature} max_tokens: {global_defaults.max_tokens}, stop: {global_defaults.stop})'
+      info_text = (
+          f'Model: {global_defaults.llm_provider}/{global_defaults.model_text_completion} '
+          f'completion mode: {global_defaults.completion_mode} '
+          f'temperature: {global_defaults.temperature} max_tokens: {global_defaults.max_tokens}'
       )
+      if global_defaults.stop:
+          info_text += f' stop: {global_defaults.stop}'
+      info(info_text)
 EOF
 endfunction
 
@@ -141,7 +129,8 @@ except:
 # Awful conditional management, but caused by some vimscript/python limits (impossible to return/exit
 if settings_available:
 
-  # debug 
+  #  show model settings as a work in progress message. 
+  #  visible only if latency is greater than hundreds of millisecond 
   progress(model_settings(llm_provider, model_or_deployment, completion_mode, temperature, max_tokens, stop))
 
   completion_text, completion_statistics = openai_completions.complete(
@@ -189,6 +178,5 @@ endfunction
 " PLUGIN COMMANDS
 "
 command! PrompterSetup call Setup()
-command! Prompter call Info()
-" command! PrompterVersion call Version()
+command! PrompterInfo call Info()
 command! PrompterComplete call Completion()

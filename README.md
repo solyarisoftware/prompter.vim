@@ -1,6 +1,4 @@
 # prompter.vim
-vim as a perfect large language models prompts playground
-
 ![alt text](screens/screenshot.1.png)
 
 Transform the Vim editor into an efficient prompt engineering environment,
@@ -10,8 +8,10 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
+Use vim as a tool for efficiently design, debug and save your LLMs prompts!
 
-## Goals
+
+## Features
 
 - **Instant LLM Completion**: 
   trigger LLM completions with a simple keystroke.
@@ -21,6 +21,8 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
   measure completions in terms of latency, used tokens, speed, etc.
 - **Focused Workflow**:
   maintain undivided focus within the editor, and seamlessly save all your work to local files.
+- **Completion Highlight**:
+  support last completion color highlight.
 
 
 ## Backstory
@@ -37,15 +39,35 @@ certain point.  I suspect a bug within the completion boxes.
 Furthermore, I am not fond of the Azure web interface for the "chat completion" mode. 
 A total mess! Instead, the original OpenAI playground is better implemented, 
 and I did not encounter the aforementioned issues.
-
 Nevertheless, both web playgrounds permit only one prompt per browser tab.
 Therefore, when dealing with multiple active prompts (developing a composite
 application composed of nested/chained template prompts), you must maintain
 multiple playgrounds open in distinct tabs.
-
-
-When you achieve certain (intermediate) noteworthy outcomes, you must copy all text boxes and save them in versioned files.
+When you achieve certain (intermediate) noteworthy outcomes,
+you must copy all text boxes and save them in versioned files.
 Undertaking all of this with web playgrounds is a cumbersome and error-prone process.
+
+
+## Completion modes
+There are two common "completion modes" foreseen in OpenAI or similar current LLMs:
+
+- **Text completion**
+
+  Completion mode set as "text" means that LLM completes 
+  the given context window prompt text with a completion text (text in -> text out).
+  An example of such a model setting is the `text-da-vinci-003` OpenAI model.
+  To use a text completion mode, the model must support that mode trough specific API.
+  
+- **Chat completion**
+  Completion mode set as "chat" means that LLM s fine-tuned for "chat".  
+  The context window prompt is in fact made by three sections: a "system prompt" and a list of user and assistant messages.
+  An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
+  To use a chat completion mode, the model must support that mode, trough specific API.
+
+💡 Prompter.vim plugin is conceived to work as a text mode fast prototyping playground, 
+avoiding the complications of the chat roles. 
+So a model that works only in chat mode (as the `gpt3.5-turbo`) is faked as a text completion model,
+just inserting the prompt text as "system" role.
 
 
 ## Install
@@ -60,10 +82,11 @@ Install the plugin using your preferred plugin manager, e.g. using vim-plug, in 
 ```viml
   Plug 'solyarisoftware/prompter.vim'
 ```
- 
+
+
 ## Environment Setup 
 
-### Openai Provider
+### OpenAI Provider
 ```bash
 # MANDATORY VARIABLES: 
 # WARNING: KEEP YOU API KEY SECRETS.
@@ -83,7 +106,7 @@ export OPENAI_MAX_TOKENS=100
 export OPENAI_STOP=""
 ```
 
-### Azure Openai Provider
+### Azure OpenAI Provider
 ```bash
 # MANDATORY VARIABLES: 
 # WARNING: KEEP YOU API KEY SECRETS.
@@ -106,9 +129,7 @@ export OPENAI_STOP="a: u:"
 ```
 
 
-## Commands
-
-### `:PrompterSetup`
+## `:PrompterSetup`
 When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
 ```viml
 :PrompterSetup
@@ -118,7 +139,8 @@ Following the environment settings, if successful, the command print in the stat
 chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
 ```
 
-### `:PrompterComplete`
+
+## `:PrompterComplete`
 Edit your prompt on a vim windows, and to run the LLM completion just  
 ```viml
 :PrompterComplete
@@ -128,42 +150,24 @@ the status line report some statistics:
 Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Speed: 154 Words: 28 Chars: 176, Lines: 7
 ```
 
-The statistics report these magnitudes:
-- Latency: bot in milliseconds and second approximations
-- Tokens: the total tokens amount, the prompt subtotal and the completion subtotal
-- Speed: this is the Tokens / latency (in seconds) ratio, say the "speed"
-- Words, the number of words generated in the completion
-- Chars, the number of character in the completions
-- Lines: the number of lines generated in the completion 
+The statistics reports these magnitudes:
+- **Latency**: bot in milliseconds and second approximations
+- **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
+- **Speed**: this is the Tokens / latency ratio (in seconds), say the completion "speed"
+- **Words**, the number of words generated in the completion
+- **Chars**, the number of character in the completions
+- **Lines**: the number of lines generated in the completion 
 
-### `:Prompter`
-Just reports:
-- the current plugin version
-- the current model attributes
-- the list of plugin commands
+💡 Highly recomended: You can use vim key map to assign a command to a single keystroke.
+E.g. you can **assign the command `:PrompterComplete` to the function key `F12`:
+```vim
+map <F12> :PrompterComplete<CR>
+```
 
 
-## Keyboard shortcuts
+## `:PrompterInfo`
+Reports the current plugin version, the list of plugin commands, the current model settings.
 
-💡Tip: You can use vim key map to assign a command to a key. Examples:
-
-- Must to have (to run completion with a single keystroke): 
-  **assign the command `:PrompterComplete` to the key `F12`:
-  ```vim
-  map <F12> :PrompterComplete<CR>
-  ```
-
-- Maybe useful:
-  Add a new line beginning with `a: `, just pressing  the key `F9`:
-  ```viml
-  map <F9> :normal oa: <CR> 
-  ```
-
-- Maybe useful:
-  Add a new line beginning with `u: `, just pressing  the key `F10`:
-  ```viml
-  map <F10> :normal ou: <CR> 
-  ```
 
 ## Variables Settings
 
@@ -175,6 +179,12 @@ Just reports:
   let g:prompter_completion_ctermbg = 3
   let g:prompter_completion_ctermfg = 0
   ```
+
+  💡 If you don't like the default highlight colors, 
+  you can replace `ctermbg` and `ctermfg` values using a subset of cterm/xterm 256 colors.
+  To show all colors available you can use the command `:HighlightColors` part of my plugin: 
+  [Highlight](https://github.com/solyarisoftware/Highlight.vim).
+
 
 - To modify the temperature value
   ```viml
@@ -191,7 +201,48 @@ Just reports:
   ```
 
 
-## Useful vim settings
+## Dialogues as part of the text prompt
+💡 A technique I use to prototype dialog prompts, is to insert a dialog turns block as in this example:
+
+```
+You (a:) are a customer care assistant and you are assisting a user (u:).
+
+DIALOG
+a: Ciao! Come posso aiutarti oggi?
+u: voglio aprire una segnalazione
+a: Fantastico! Per prima cosa, potresti darmi una descrizione dettagliata del problema che stai riscontrando?
+u: non si accedene il monitor del computer
+a: Grazie per la descrizione. Qual è il nome o il modello del prodotto o del sistema con cui stai riscontrando problemi?
+u: non riesco a leggere la marca. E' il monitor del pc aziendale.
+a: Grazie per l'informazione. Qual è il tuo metodo preferito di contatto?
+u: via mail a g.angelotti@gmail.com
+a: Grazie. Per favore, conferma l'indirizzo email fornito: g.angelotti@gmail.com
+u: è corretto
+a: Ottimo. Ecco un riepilogo delle informazioni fornite:
+...
+
+TASK
+...
+```
+In the above case these vim comand could be useful:
+
+- Add a new line beginning with `a: `, just pressing  the key `F9`:
+  ```viml
+  map <F9> :normal oa: <CR> 
+  ```
+
+- Add a new line beginning with `u: `, just pressing  the key `F10`:
+  ```viml
+  map <F10> :normal ou: <CR> 
+  ```
+
+
+## Other useful vim settings
+
+- To read all statsistics print of your completions:
+  ```viml
+  :messages
+  ```
 
 - Enabling Soft Wrap
   ```viml
@@ -205,42 +256,44 @@ Just reports:
   au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
   ```
 
-## Features to do
 
-### Support template prompts
-Things become interesting when you design "template prompts"
-comprised of various parts that can be dynamically constructed at run-time.
-Consider, for instance, that you wish to prototype a "template prompt"
-containing placeholder variables, that are references to certain variables
-filled by other prompts or files, like so:
+## Features to do  in future releases
 
-```jinja2
-TASK
-{{some_task_description}}
+- **Support template prompts**
 
-DATA
-{{some_yaml}}
+  Things become interesting when you design "template prompts"
+  comprised of various parts that can be dynamically constructed at run-time.
+  Consider, for instance, that you wish to prototype a "template prompt"
+  containing placeholder variables, that are references to certain variables
+  filled by other prompts or files, like so:
 
-DIALOG
-{{dialog_history}}
-```
+  ```
+  TASK
+  {some_task_description}
 
-In the example above, when using web playgrounds, you function as a copy-paste intermediary. 
-You are required to open four web tabs, execute text completions in each, 
-and finally manually paste completions, substituting variables such as {{some_data}}, {{dialog_history}}. 
-Additionally, you might need to load a file into a variable, like {{some_yaml}}.
+  DATA
+  {some_yaml}
 
-The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
-the variable placeholders, with the content of other buffers/windows.
+  DIALOG
+  {dialog_history}
+  ```
+
+  In the example above, when using web playgrounds, you function as a copy-paste intermediary. 
+  You are required to open four web tabs, execute text completions in each, 
+  and finally manually paste completions, substituting variables such as `{some_data}`, `{dialog_history}`. 
+  Additionally, you might need to load a file into a variable, like `{some_yaml}`.
+
+  The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
+  the variable placeholders, with the content of other buffers/windows.
 
 
-### Use LiteLLM as a LLM provider abstraction layer
+- **Use LiteLLM as a LLM provider abstraction layer**
 
-https://github.com/BerriAI/litellm is a lightweight package to simplify LLM API calls 
-- Azure, OpenAI, Cohere, Anthropic, Replicate. Manages input/output translation.
+  https://github.com/BerriAI/litellm is a lightweight package to simplify LLM API calls 
+  with Azure, OpenAI, Cohere, Anthropic, etc.
 
-So far prompter.vim support interface with Azure Openai or Openai native providers.
-LiteLLM could be a better option to use openai APis.
+  So far prompter.vim support interface with Azure OpenAI or OpenAI native providers.
+  LiteLLM could be a better option to use openai APis.
 
 
 ## Similar projects
@@ -252,15 +305,13 @@ LiteLLM could be a better option to use openai APis.
 
 This project is work-in-progress proof-of-concept alfa version.
 I'm not a vimscript expert, so any contribute or suggestion is welcome.
-
 For any proposal and issue, please submit here on github issues for bugs, suggestions, etc.
 You can also contact me via email (giorgio.robino@gmail.com).
 
 **If you like the project, please ⭐️star this repository to show your support! 🙏**
 
-## LICENSE
 
-MIT License
+## MIT LICENSE
 ```
 Copyright (c) 2023 Giorgio Robino
 

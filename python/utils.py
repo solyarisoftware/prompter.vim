@@ -15,9 +15,10 @@ def help():
         version(),
         '',
         'Commands:',
-        'PrompterSetup: read OS environment variables',
-        'PrompterComplete: complete the prompt',
-        'prompterModel: show model attributes'
+        'PrompterSetup    - read OS environment variables',
+        'PrompterComplete - complete the prompt',
+        'PrompterInfo     - some informations (version, commands, current model)',
+        # 'prompterModel    - show model attributes'
     ])
 
 
@@ -29,31 +30,27 @@ def model_settings(
     max_tokens: int,
     stop: [str],
 ) -> str:
-    ''' print the model configuration parameters '''
+    ''' print the model configuration parameters, in one line '''
 
-    single_line_to_print = (
-        f'Current buffer model: {llm_provider}/{model} '
-        f'(completion mode: {completion_mode} '
-        f'temperature: {temperature}, '
-        f'max tokens: {max_tokens}'
+    info_text = (
+        f'Model: {llm_provider}/{model} '
+        f'completion mode: {completion_mode} '
+        f'temperature: {temperature} max_tokens: {max_tokens}'
     )
+    if stop:
+        info_text += f' stop: {stop}'
 
-    if stop and any(stop):
-        single_line_to_print += f', stop: {stop})'
-    else:
-        single_line_to_print += ')'
-
-    return single_line_to_print
+    return info_text
 
 
-def speed(tokens: int, latency_msecs: int) -> str:
+def speed(tokens: int, latency_msecs: int) -> int:
     ''' speed as the tokens/latency ratio where latency is measured in seconds '''
 
     latency_secs = latency_msecs / 1000
     v = tokens / latency_secs
 
-    # round to an integer
-    return str(round(v))
+    # round the ration to an integer
+    return round(v)
 
 
 def completion_statistics(
