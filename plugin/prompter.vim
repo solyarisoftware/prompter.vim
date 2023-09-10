@@ -6,9 +6,12 @@ endif
 
 " set default kay mappings
 let g:prompter_complete_keystroke = '<F12>'
+let g:prompter_setup_keystroke = '<F11>'
+let g:prompter_info_keystroke = '<F10>'
 
 " set completion highlight default colors,  
-let g:prompter_completion_ctermbg = 3 " orange = 3. green = 10
+" orange = 3. green = 10
+let g:prompter_completion_ctermbg = 3
 let g:prompter_completion_ctermfg = 0
 
 "
@@ -34,10 +37,9 @@ import sys
 sys.path.append(vim.eval('s:python_path'))
 from openai_setup import CHAT_COMPLETION_MODE
 from vim_utils import echo, error
-from utils import model_settings
+from utils import model_settings, help
 
-echo(utils.help())
-echo('\nModel:')
+echo(help())
 
 try:
     llm_provider = vim.eval('g:llm_provider')
@@ -49,7 +51,23 @@ try:
 except:
     error('prompter.vim setup not done! Run in command line :PrompterSetup')
 
-echo(model_settings(llm_provider, model_or_deployment, completion_mode, temperature, max_tokens, stop))
+echo('\nModel:')
+echo(
+    model_settings(
+        llm_provider,
+        model_or_deployment,
+        completion_mode,
+        temperature,
+        max_tokens,
+        stop
+    )
+)
+
+echo('\nKey Mappings:')
+echo(vim.eval('g:prompter_complete_keystroke') + ' PrompterComplete')
+echo(vim.eval('g:prompter_info_keystroke') + ' PrompterInfo')
+echo(vim.eval('g:prompter_setup_keystroke') + ' PrompterSetup')
+
 EOF
 endfunction
 
@@ -62,8 +80,10 @@ sys.path.append(vim.eval('s:python_path'))
 from openai_setup import setup, CHAT_COMPLETION_MODE
 from vim_utils import info, error
 
-# set default kay mappings
+# set default key mappings
 vim.command("execute 'map ' . g:prompter_complete_keystroke . ' :PrompterComplete<CR>'")
+vim.command("execute 'map ' . g:prompter_info_keystroke . ' :PrompterInfo<CR>'")
+vim.command("execute 'map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'")
 
 global_defaults = None
 
@@ -136,7 +156,16 @@ if settings_available:
 
   #  show model settings as a work in progress message. 
   #  visible only if latency is greater than hundreds of millisecond 
-  progress(model_settings(llm_provider, model_or_deployment, completion_mode, temperature, max_tokens, stop))
+  progress(
+      model_settings(
+          llm_provider,
+          model_or_deployment,
+          completion_mode,
+          temperature,
+          max_tokens,
+          stop
+      )
+  )
 
   completion_text, completion_statistics = openai_completions.complete(
       prompt,

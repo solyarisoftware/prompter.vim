@@ -137,44 +137,44 @@ export OPENAI_STOP="a: u:"
 ```
 
 
-## `:PrompterSetup` command
-When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
-```viml
-:PrompterSetup
-```
-Following the environment settings, if successful, the command print in the status line the model configurations:
-```
-chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
-```
+## Commands
 
+- `PrompterSetup`
 
-## `:PrompterComplete` command
-Edit your prompt on a vim windows, and to run the LLM completion just  
-```viml
-:PrompterComplete
-```
-the status line report some statistics:
-```
-Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
-```
+  When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
+  ```viml
+  :PrompterSetup
+  ```
+  Following the environment settings, if successful, the command print in the status line the model configurations:
+  ```
+  chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
+  ```
 
-The statistics reports these magnitudes:
-- **Latency**: bot in milliseconds and second approximations
-- **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
-- **Throughput**: this is the completion Tokens / latency ratio (in seconds)
-- **Words**, the number of words generated in the completion
-- **Chars**, the number of character in the completions
-- **Lines**: the number of lines generated in the completion 
+  - `PrompterComplete`
 
-💡 Highly recomended: You can use vim key map to assign a command to a single keystroke.
-E.g. you can **assign the command `:PrompterComplete` to the function key `F12`:
-```vim
-map <F12> :PrompterComplete<CR>
-```
+    Edit your prompt on a vim windows, and to run the LLM completion just  
+    ```viml
+    :PrompterComplete
+    ```
+    the status line report some statistics:
+    ```
+    Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
+    ```
 
+    The statistics reports these magnitudes:
+    - **Latency**: bot in milliseconds and second approximations
+    - **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
+    - **Throughput**: this is the completion Tokens / latency ratio (in seconds)
+    - **Words**, the number of words generated in the completion
+    - **Chars**, the number of character in the completions
+    - **Lines**: the number of lines generated in the completion 
 
-## `:PrompterInfo` command
-Reports the current plugin version, the list of plugin commands, the current model settings.
+    💡 By default the command is assigned to the function key `F12`. 
+    In such a way you can run the completion just pressingto the single keystroke `F12`.
+
+  - `PrompterInfo`
+
+    Reports the current plugin version, the list of plugin commands, the current model settings.
 
 
 ## Variables Settings
@@ -193,7 +193,6 @@ Reports the current plugin version, the list of plugin commands, the current mod
   To show all colors available you can use the command `:HighlightColors` part of my plugin: 
   [Highlight](https://github.com/solyarisoftware/Highlight.vim).
 
-
 - To modify the temperature value
   ```viml
   let g:temperature = 0.2
@@ -206,6 +205,11 @@ Reports the current plugin version, the list of plugin commands, the current mod
 - To modify the stop sequence(s) 
   ```viml
   let g:stop = ['x:', 'y:', 'z:']
+  ```
+
+- You can assign the commands like `:PrompterComplete` to any key mappings of your preference, by example:
+  ```vim
+  map <F2> :PrompterComplete<CR>
   ```
 
 
@@ -279,9 +283,9 @@ These vim comands could be useful:
   ```
 
 
-## Features to do  in future releases
+## Features to do in future releases
 
-- **Support template prompts**
+- [ ] **Support template prompts**
 
   You are designing "template prompts"
   comprised of various parts that can be dynamically constructed at run-time.
@@ -308,13 +312,21 @@ These vim comands could be useful:
   The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
   the variable placeholders, with the content of other buffers/windows.
 
-
-- **Use LiteLLM as a LLM provider abstraction layer**
+- [ ] **Use LiteLLM as a LLM provider abstraction layer**
 
   So far prompter.vim support interface with Azure OpenAI or OpenAI native providers.
 
   [LiteLLM](https://github.com/BerriAI/litellm) could be a better option to use openai API directly.
   It is a lightweight package to simplify LLM API calls with Azure, OpenAI, Cohere, Anthropic, etc.
+
+
+- [ ] **Improve highligt colorizing**
+
+  So far just the last completion is colorized.
+  The highlight  could forsee all completions or it could be avoided optionally.
+
+- [ ] **Streaming support**
+  So far streaming completion is not take in consideration. 
 
 
 ## Similar projects
