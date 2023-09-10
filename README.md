@@ -139,42 +139,42 @@ export OPENAI_STOP="a: u:"
 
 ## Commands
 
-- `PrompterSetup`
+### `PrompterSetup`
 
-  When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
-  ```viml
-  :PrompterSetup
-  ```
-  Following the environment settings, if successful, the command print in the status line the model configurations:
-  ```
-  chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
-  ```
+When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
+```viml
+:PrompterSetup
+```
+Following the environment settings, if successful, the command print in the status line the model configurations:
+```
+chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
+```
 
-  - `PrompterComplete`
+### `PrompterComplete`
 
-    Edit your prompt on a vim windows, and to run the LLM completion just  
-    ```viml
-    :PrompterComplete
-    ```
-    the status line report some statistics:
-    ```
-    Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
-    ```
+Edit your prompt on a vim windows, and to run the LLM completion just  
+```viml
+:PrompterComplete
+```
+the status line report some statistics:
+```
+Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
+```
 
-    The statistics reports these magnitudes:
-    - **Latency**: bot in milliseconds and second approximations
-    - **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
-    - **Throughput**: this is the completion Tokens / latency ratio (in seconds)
-    - **Words**, the number of words generated in the completion
-    - **Chars**, the number of character in the completions
-    - **Lines**: the number of lines generated in the completion 
+The statistics reports these magnitudes:
+- **Latency**: bot in milliseconds and second approximations
+- **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
+- **Throughput**: this is the completion Tokens / latency ratio (in seconds)
+- **Words**, the number of words generated in the completion
+- **Chars**, the number of character in the completions
+- **Lines**: the number of lines generated in the completion 
 
-    💡 By default the command is assigned to the function key `F12`. 
-    In such a way you can run the completion just pressingto the single keystroke `F12`.
+💡 By default the command is assigned to the function key `F12`. 
+In such a way you can run the completion just pressingto the single keystroke `F12`.
 
-  - `PrompterInfo`
+### `PrompterInfo`
 
-    Reports the current plugin version, the list of plugin commands, the current model settings.
+Reports the current plugin version, the list of plugin commands, the current model settings.
 
 
 ## Variables Settings
