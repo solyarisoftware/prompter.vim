@@ -4,6 +4,13 @@ if !has('python3')
   finish
 endif
 
+" set default kay mappings
+let g:prompter_complete_keystroke = '<F12>'
+
+" set completion highlight default colors,  
+let g:prompter_completion_ctermbg = 3 " orange = 3. green = 10
+let g:prompter_completion_ctermfg = 0
+
 "
 "~/.vim/
 "└── pack/
@@ -55,9 +62,8 @@ sys.path.append(vim.eval('s:python_path'))
 from openai_setup import setup, CHAT_COMPLETION_MODE
 from vim_utils import info, error
 
-# set completion highlight default colors,  
-vim.command('let g:prompter_completion_ctermbg = 3')
-vim.command('let g:prompter_completion_ctermfg = 0')
+# set default kay mappings
+vim.command("execute 'map ' . g:prompter_complete_keystroke . ' :PrompterComplete<CR>'")
 
 global_defaults = None
 

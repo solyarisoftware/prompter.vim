@@ -43,8 +43,8 @@ def model_settings(
     return info_text
 
 
-def speed(tokens: int, latency_msecs: int) -> int:
-    ''' speed as the tokens/latency ratio where latency is measured in seconds '''
+def throughput(tokens: int, latency_msecs: int) -> int:
+    ''' tokens/latency ratio where latency is measured in seconds '''
 
     latency_secs = latency_msecs / 1000
     v = tokens / latency_secs
@@ -82,9 +82,9 @@ def completion_statistics(
         nlines_statistics = f', Lines: {nlines}'
         text_statistics += nlines_statistics
 
-    vel = speed(total_tokens, latency_msecs)
+    t = throughput(total_tokens, latency_msecs)
 
-    single_line_to_print = f'Latency: {latency_str} Tokens: {tokens_report} Speed: {vel} {text_statistics}'
+    single_line_to_print = f'Latency: {latency_str} Tokens: {tokens_report} Throughput: {t} {text_statistics}'
 
     # don't print finish reason if the completion finished normally
     if finish_reason != 'stop':
@@ -139,4 +139,4 @@ if __name__ == '__main__':
     print()
 
     print('Speed')
-    print(speed(150, 354))
+    print(throughput(150, 354))

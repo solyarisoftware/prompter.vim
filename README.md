@@ -18,7 +18,7 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - **Prompt Interaction**:
   generate prompts directly in the editor and save them on the fly.
 - **Run-time statistics**:
-  measure completions in terms of latency, used tokens, speed, etc.
+  measure completions in terms of latency, used tokens, throughput, etc.
 - **Focused Workflow**:
   maintain undivided focus within the editor, and seamlessly save all your work to local files.
 - **Completion Highlight**:
@@ -155,13 +155,13 @@ Edit your prompt on a vim windows, and to run the LLM completion just
 ```
 the status line report some statistics:
 ```
-Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Speed: 154 Words: 28 Chars: 176, Lines: 7
+Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
 ```
 
 The statistics reports these magnitudes:
 - **Latency**: bot in milliseconds and second approximations
 - **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
-- **Speed**: this is the Tokens / latency ratio (in seconds), say the completion "speed"
+- **Throughput**: this is the completion Tokens / latency ratio (in seconds)
 - **Words**, the number of words generated in the completion
 - **Chars**, the number of character in the completions
 - **Lines**: the number of lines generated in the completion 
@@ -205,11 +205,12 @@ Reports the current plugin version, the list of plugin commands, the current mod
 
 - To modify the stop sequence(s) 
   ```viml
-  let g:stop = ['a:', 'u:']
+  let g:stop = ['x:', 'y:', 'z:']
   ```
 
 
 ## Dialogues as part of the text prompt
+
 💡 A technique I'm using to prototype dialog prompts, is to insert a dialog turns block 
 as in the follwing example, where the dialog block terminates with the "stop sequence" (e.g. `a:`)
 triggering LLM to complete the assistant role:
@@ -234,41 +235,47 @@ u: that's correct!
 a:
 ```
 
-In the above case these vim comand could be useful:
+In the above case, to set the LLM stop waiting for user input, 
+you could set the stop sequence as `u:` with command: 
 
-- Add a new line beginning with `a: `, just pressing  the key `F9`:
+```viml
+let g:stop = ['u:']
+```
+
+These vim comands could be useful:
+
+- Add a new line beginning with `u: `, just pressing  the key `F9`:
   ```viml
-  map <F9> :normal oa: <CR> 
+  map <F9> :normal ou: <CR> 
   ```
-
-- Add a new line beginning with `u: `, just pressing  the key `F10`:
+- Add a new line beginning with `a: `, just pressing  the key `F10`:
   ```viml
-  map <F10> :normal ou: <CR> 
+  map <F10> :normal oa: <CR> 
   ```
 
 
 ## Other useful vim settings
 
-- To read all statsistics print of your completions:
+- To read all statistics print of your completions:
   ```viml
-  :messages
+  messages
   ```
 
 - Enabling Soft Wrap
   ```viml
-  :set wrap linebreak nolist
+  set wrap linebreak nolist
   ```
 
 - How to see what mapping for a particular key, e.g. `F12`:
   ```viml
-  :map <F12>
+  map <F12>
   ```
 
 - mark placeholders
   ```viml
-      syntax region CustomBraces start=/{/ end=/}/
-      highlight link CustomBraces Statement
-      au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
+  syntax region CustomBraces start=/{/ end=/}/
+  highlight link CustomBraces Statement
+  au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
   ```
 
 
