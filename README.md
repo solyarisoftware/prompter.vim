@@ -386,14 +386,12 @@ These vim comands could be useful:
   So far streaming completion is not take in consideration. 
 
 ## 👏 Acknowledgements
-Thanks you to David Shapiro dissemination on LLMs and generative AI. 
-I have followed with enthusiasm especially his LLM prompt engineering live coding youtube videos! 
+Thanks you to [David Shapiro](https://github.com/daveshap) huge dissemination work on LLMs and generative AI. 
+I have followed with enthusiasm especially his LLM prompt engineering live coding [youtube videos](https://www.youtube.com/@4IR.David.Shapiro)! 
 
 ## Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
-
-## 🛠Tested on
 
 
 ## ⭐️ Status / How to contribute
