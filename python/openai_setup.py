@@ -22,7 +22,7 @@ AZURE_LLM_PROVIDER = 'azure'
 #
 # - CHAT_COMPLETION
 #   this is the new model that have 'roles (syst / user / assistant)
-#   this mode is mandatory for new models like gpt-3.5 or pt4
+#   this mode is mandatory for new models like gpt-3.5 or gpt4
 #
 #   WARNING
 #   is up to you to know is a given model or deployment_id is suitable for the COMPLETION_TYPE
@@ -43,6 +43,16 @@ PRESENCE_PENALTY = 0
 def setup() -> NamedTuple:
     ''' check required OS variables and setup defaults '''
 
+    # get the completion mode
+    try:
+        completion_mode = os.getenv('OPENAI_COMPLETION_MODE')  # 'chat' or 'text'
+    except Exception as e:
+        raise Exception('OPENAI_COMPLETION_MODE environment variable not set') from e
+
+    if completion_mode not in [CHAT_COMPLETION_MODE, TEXT_COMPLETION_MODE]:
+        raise Exception(f'OPENAI_COMPLETION_MODE must be: \'{CHAT_COMPLETION_MODE}\' or \'{TEXT_COMPLETION_MODE}\'')
+
+    # get LLM provider
     try:
         llm_provider = os.getenv('OPENAI_LLM_PROVIDER').lower()
     except Exception as e:
@@ -67,16 +77,19 @@ def setup() -> NamedTuple:
 
         openai.api_version = os.getenv('AZURE_OPENAI_API_VERSION', '2023-05-15')
 
-        # WARNING in azure it's the DEPLOYMENT name (that correspond to an Openai model)
-        try:
-            model_chat_completion = os.getenv('AZURE_DEPLOYMENT_NAME_CHAT_COMPLETION')  # 'gpt-35-turbo', or soon 'gpt-35-turbo-0613'
-        except Exception as e:
-            raise Exception('AZURE_OPENAI_DEPLOYMENT_NAME_CHAT_COMPLETION environment variable not set') from e
-
-        try:
-            model_text_completion = os.getenv('AZURE_DEPLOYMENT_NAME_TEXT_COMPLETION')  # 'text-davinci-003'
-        except Exception as e:
-            raise Exception('AZURE_OPENAI_DEPLOYMENT_NAME_TEXT_COMPLETION environment variable not set') from e
+        if completion_mode == CHAT_COMPLETION_MODE:
+            # WARNING in azure it's the DEPLOYMENT name (that corresponds to an Openai model)
+            try:
+                model_chat_completion = os.getenv('AZURE_DEPLOYMENT_NAME_CHAT_COMPLETION')  # 'gpt-35-turbo', or soon 'gpt-35-turbo-0613'
+                model_text_completion = None
+            except Exception as e:
+                raise Exception('AZURE_OPENAI_DEPLOYMENT_NAME_CHAT_COMPLETION environment variable not set') from e
+        else:
+            try:
+                model_text_completion = os.getenv('AZURE_DEPLOYMENT_NAME_TEXT_COMPLETION')  # 'text-davinci-003'
+                model_chat_completion = None
+            except Exception as e:
+                raise Exception('AZURE_OPENAI_DEPLOYMENT_NAME_TEXT_COMPLETION environment variable not set') from e
 
     elif llm_provider == OPENAI_LLM_PROVIDER:
         #
@@ -87,20 +100,15 @@ def setup() -> NamedTuple:
         except Exception as e:
             raise Exception('OPENAI_API_KEY environment variable not set') from e
 
-        model_chat_completion = os.getenv('OPENAI_MODEL_NAME_CHAT_COMPLETION', 'gpt-3.5-turbo')
-        model_text_completion = os.getenv('OPENAI_MODEL_NAME_TEXT_COMPLETION', 'text-davinci-003')
+        if completion_mode == CHAT_COMPLETION_MODE:
+            model_chat_completion = os.getenv('OPENAI_MODEL_NAME_CHAT_COMPLETION', 'gpt-3.5-turbo')
+            model_text_completion = None
+        else:
+            model_text_completion = os.getenv('OPENAI_MODEL_NAME_TEXT_COMPLETION', 'text-davinci-003')
+            model_chat_completion = None
 
     else:
-        raise Exception('OPENAI_LLM_PROVIDER valid values: \'azure\' or \'openai\'')
-
-    # common settings
-    try:
-        completion_mode = os.getenv('OPENAI_COMPLETION_MODE')  # 'chat' or 'text'
-    except Exception as e:
-        raise Exception('OPENAI_COMPLETION_MODE environment variable not set') from e
-
-    if completion_mode not in ['text', 'chat']:
-        raise Exception('OPENAI_COMPLETION_MODE valid values: \'text\' or \'chat\'')
+        raise Exception('OPENAI_LLM_PROVIDER must be: \'{AZURE_LLM_PROVIDER}\' or \'{OPENAI_LLM_PROVIDER}\'')
 
     temperature = float(os.getenv('OPENAI_TEMPERATURE', TEMPERATURE))
     max_tokens = int(os.getenv('OPENAI_MAX_TOKENS', MAX_TOKENS))
@@ -134,13 +142,13 @@ if __name__ == '__main__':
     try:
         defaults = setup()
         print(
-            f'{defaults.llm_provider}, '
-            f'{defaults.completion_mode}, '
-            f'{defaults.model_chat_completion}, '
-            f'{defaults.model_text_completion}, '
-            f'{defaults.temperature}, '
-            f'{defaults.max_tokens}, '
-            f'{defaults.stop}'
+            f'llm_provider: {defaults.llm_provider}, '
+            f'completion_mode: {defaults.completion_mode}, '
+            f'model_chat_completion: {defaults.model_chat_completion}, '
+            f'model_text_completion: {defaults.model_text_completion}, '
+            f'temperature: {defaults.temperature}, '
+            f'max_tokens: {defaults.max_tokens}, '
+            f'stop: {defaults.stop}'
         )
     except Exception as e:
         print(f'ERROR: {e}')

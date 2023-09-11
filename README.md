@@ -8,6 +8,14 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
+## How it works
+
+1. set your variable environment to configure model and settings
+2. run `:PrompterSetup`
+3. edit your prompt 
+4. Press `<F12>` to get the LLM completion
+5. Enjoy your prompt engineering!
+
 ![alt text](screens/screenshot.1.png)
 
 
@@ -25,30 +33,35 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
   support last completion color highlight.
 
 
-## Backstory
+## 🙄 Backstory
 
-The idea emerged as I was writing some LLM prompts, experimenting with some
-prompt engineering techniques, using a simple "text completion" approach. 
-You write your text prompt and then request a Large Language Model (LLM) completion. 
+The idea emerged as I was writing LLM prompts, experimenting with some
+prompt engineering techniques, using a simple "text completion" approach where 
+you write your text prompt corpus and then request a Large Language Model (LLM) completion. 
 
 My initial approach was to utilize the web playgrounds offered by LLM providers.
 However, I encountered numerous issues especially while interacting
-with Azure OpenAI web playgrounds. For reasons I do not yet comprehend, the
-web interaction on the Azure web playground slow down considerably after a
-certain point.  I suspect a bug within the completion boxes. 
-Furthermore, I am not fond of the Azure web interface for the "chat completion" mode. 
+with Azure OpenAI web playgrounds.
+
+For reasons I do not yet comprehend, 
+the web interaction on the Azure web playground slow down considerably after a
+certain point.I suspect a bug within the completion boxes. 
+Furthermore, I am not fond of the Azure web interface for the "chat completion" mode.
 A total mess! Instead, the original OpenAI playground is better implemented, 
 and I did not encounter the aforementioned issues.
+
 Nevertheless, both web playgrounds permit only one prompt per browser tab.
 Therefore, when dealing with multiple active prompts (developing a composite
-application composed of nested/chained template prompts), you must maintain
-multiple playgrounds open in distinct tabs.
+application composed of nested/chained template prompts), 
+you must maintain multiple playgrounds open in distinct tabs.
 When you achieve certain (intermediate) noteworthy outcomes,
 you must copy all text boxes and save them in versioned files.
+
 Undertaking all of this with web playgrounds is a cumbersome and error-prone process.
+The final thought was: what if I could run my completion directly inside mt vim editor?
 
 
-## Completion modes
+## ⚠️  Completion modes: `text` versus `chat`
 There are two common "completion modes" foreseen in OpenAI or similar current LLMs:
 
 - **`text` completion**
@@ -67,13 +80,13 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
   To use a chat completion mode, the model must support that mode, trough specific API.
 
-💡 Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
+⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 avoiding the complications of the chat roles. 
 So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "faked" 
 to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
 
 
-## Install
+## 📦 Install
 
 This pluguin is made in Python3. Check if your vim installation support Python3 
 
@@ -88,7 +101,7 @@ Plug 'solyarisoftware/prompter.vim'
 ```
 
 
-## Environment Setup 
+## 📦 Environment Variables Setup 
 
 ### OpenAI Provider
 In the example here below, you set the secret API key, the completion mode as `chat` and you specify the model to be used
@@ -99,12 +112,12 @@ In the example here below, you set the secret API key, the completion mode as `c
 export AZURE_OPENAI_API_KEY="YOUR OPENAI API KEY"
 
 export OPENAI_COMPLETION_MODE="chat"
-
 export OPENAI_MODEL_NAME_CHAT_COMPLETION="gpt-3.5-turbo"
-export OPENAI_MODEL_TEXT_COMPLETION="text-davinci-003"
+
+# export OPENAI_COMPLETION_MODE="text"
+# export OPENAI_MODEL_TEXT_COMPLETION="text-davinci-003"
 
 # OPTIONAL SETTINGS
-# specify the LLM provider. Default is just "openai"
 export LLM_PROVIDER="openai"
 
 export OPENAI_TEMPERATURE=0.7
@@ -126,42 +139,86 @@ export AZURE_OPENAI_API_KEY="YOUR AZURE OPENAI API KEY"
 export AZURE_OPENAI_API_ENDPOINT="YOUR AZURE OPENAI ENDPOINT"
 
 export OPENAI_COMPLETION_MODE="chat"
-
 export AZURE_DEPLOYMENT_NAME_CHAT_COMPLETION="gpt-35-turbo"
-export AZURE_DEPLOYMENT_NAME_TEXT_COMPLETION="text-davinci-003"
+
+# export OPENAI_COMPLETION_MODE="text"
+# export AZURE_DEPLOYMENT_NAME_TEXT_COMPLETION="text-davinci-003"
 
 # OPTIONAL SETTINGS
-export OPENAI_TEMPERATURE=0.7
-export OPENAI_MAX_TOKENS=100
-export OPENAI_STOP="a: u:"
+export OPENAI_TEMPERATURE=0.5
+export OPENAI_MAX_TOKENS=1000
+export OPENAI_STOP="a:"
 ```
 
+💡 A good idea is to edit and keep all variables above in a hidden file, e.g. `vi ~/.prompter.vim`,
+and execute it with `source ~/.prompter.vim`
 
-## Commands
+
+## 👊 Commands
+In vim command mode (:) these commands are available:
 
 ### `PrompterSetup`
 
 When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
 ```viml
-:PrompterSetup
+PrompterSetup
 ```
 Following the environment settings, if successful, the command print in the status line the model configurations:
 ```
-chat completion model: azure/gpt-35-turbo (temperature: 0.7 max_tokens: 100)
+Model: azure/gpt-35-turbo completion mode: chat temperature: 0.7 max_tokens: 100
+```
+Explanation of values in the status line report:
+```
+                               temperature preset value ───────────────────────────┐
+                                                                                   │
+                                max_tokens preset value ──────────┐                │
+                                                                  │                │
+      ┌─────┐ ┌────────────┐                 ┌────┐             ┌─┴─┐            ┌─┴─┐
+Model:│azure│/│gpt-35-turbo│ completion mode:│chat│ temperature:│0.7│ max_tokens:│100│
+      └──┬──┘ └─────┬──────┘                 └──┬─┘             └───┘            └───┘
+         │          │                           │
+         │          │                           └─ chat or text, depending on the model
+         │          │
+         │          └── name of the Azure deployment
+         │
+         └───────────── name of the LLM provider
 ```
 
 ### `PrompterComplete`
 
 Edit your prompt on a vim windows, and to run the LLM completion just  
 ```viml
-:PrompterComplete
+PrompterComplete
 ```
 the status line report some statistics:
 ```
 Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
 ```
+Explanation of values in the status line report:
+```
+          ┌─ latency in milliseconds and seconds
+          │
+          │                     ┌───────────────────────────────── total nr. of tokens
+          │                     │
+          │                     │            ┌──────────────────── nr. of tokens in prompt
+          │                     │            │
+          │                     │            │               ┌──── nr. of tokens in completion
+          │                     │            │               │
+        ┌─┴───────────┐       ┌─┴─┐        ┌─┴─┐           ┌─┴┐             ┌───┐      ┌──┐      ┌───┐       ┌─┐
+Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│) Throughput:│154│Words:│28│Chars:│176│ Lines:│7│
+        └─────────────┘       └───┘        └───┘           └──┘             └─┬─┘      └─┬┘      └─┬─┘       └┬┘
+                                                                              │          │         │          │
+                                                                              │          │         │          │
+                                      Latency / Tokens ───────────────────────┘          │         │          │
+                                                                                         │         │          │
+                                                                 nr. of words ───────────┘         │          │
+                                                                                                   │          │
+                                                            nr. of characters ─────────────────────┘          │
+                                                                                                              │
+                                                                 nr. of lines ────────────────────────────────┘
+```
 
-The statistics reports these magnitudes:
+The statistics reports these variables:
 - **Latency**: bot in milliseconds and second approximations
 - **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
 - **Throughput**: this is the completion Tokens / latency ratio (in seconds)
@@ -169,7 +226,7 @@ The statistics reports these magnitudes:
 - **Chars**, the number of character in the completions
 - **Lines**: the number of lines generated in the completion 
 
-💡 By default the command is assigned to the function key `F12`. 
+🚀 By default the command is assigned to the function key `F12`. 
 In such a way you can run the completion just pressingto the single keystroke `F12`.
 
 ### `PrompterInfo`
@@ -207,15 +264,40 @@ Reports the current plugin version, the list of plugin commands, the current mod
   let g:stop = ['x:', 'y:', 'z:']
   ```
 
+
+## Other useful vim settings
+
+- To read all statistics print of your completions:
+  ```viml
+  messages
+  ```
+
+- Enabling Soft Wrap
+  ```viml
+  set wrap linebreak nolist
+  ```
+
+- How to see what mapping for a particular key, e.g. `F12`:
+  ```viml
+  map <F12>
+  ```
+
 - You can assign the commands like `:PrompterComplete` to any key mappings of your preference, by example:
   ```vim
   map <F2> :PrompterComplete<CR>
   ```
 
+- mark placeholders
+  ```viml
+  syntax region CustomBraces start=/{/ end=/}/
+  highlight link CustomBraces Statement
+  au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
+  ```
 
-## Dialogues as part of the text prompt
 
-💡 A technique I'm using to prototype dialog prompts, is to insert a dialog turns block 
+## 💡 Dialogues as part of the text prompt
+
+A technique I'm using to prototype dialog prompts, is to insert a dialog turns block 
 as in the follwing example, where the dialog block terminates with the "stop sequence" (e.g. `a:`)
 triggering LLM to complete the assistant role:
 
@@ -255,31 +337,6 @@ These vim comands could be useful:
 - Add a new line beginning with `a: `, just pressing  the key `F10`:
   ```viml
   map <F10> :normal oa: <CR> 
-  ```
-
-
-## Other useful vim settings
-
-- To read all statistics print of your completions:
-  ```viml
-  messages
-  ```
-
-- Enabling Soft Wrap
-  ```viml
-  set wrap linebreak nolist
-  ```
-
-- How to see what mapping for a particular key, e.g. `F12`:
-  ```viml
-  map <F12>
-  ```
-
-- mark placeholders
-  ```viml
-  syntax region CustomBraces start=/{/ end=/}/
-  highlight link CustomBraces Statement
-  au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
   ```
 
 
@@ -328,20 +385,27 @@ These vim comands could be useful:
 - [ ] **Streaming support**
   So far streaming completion is not take in consideration. 
 
+## 👏 Acknowledgements
+Thanks you to David Shapiro dissemination on LLMs and generative AI. 
+I have followed with enthusiasm especially his LLM prompt engineering live coding youtube videos! 
 
 ## Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
 
+## 🛠Tested on
 
-## How to contribute
 
-This project is work-in-progress proof-of-concept alfa version.
+## ⭐️ Status / How to contribute
+
+This project is work-in-progress proof-of-concept alfa version!
+
 I'm not a vimscript expert, so any contribute or suggestion is welcome.
 For any proposal and issue, please submit here on github issues for bugs, suggestions, etc.
 You can also contact me via email (giorgio.robino@gmail.com).
 
-**If you like the project, please ⭐️star this repository to show your support! 🙏**
+
+**🙏 IF YOU LIKE THE PROJECT, PLEASE ⭐️STAR THIS REPOSITORY TO SHOW YOUR SUPPORT!**
 
 
 ## MIT LICENSE
