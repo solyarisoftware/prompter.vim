@@ -1,4 +1,5 @@
 # prompter.vim
+
 Use vim as a tool for efficiently design, debug and save your LLMs prompts!
 
 Transform the Vim editor into an efficient prompt engineering environment,
@@ -113,7 +114,7 @@ Plug 'solyarisoftware/prompter.vim'
 ```
 
 
-## 📦 Environment Variables Setup 
+## 🔑 Environment Variables Setup 
 
 ### OpenAI Provider
 In the example here below, you set the secret API key, the completion mode as `chat` and you specify the model to be used
@@ -246,7 +247,7 @@ In such a way you can run the completion just pressingto the single keystroke `F
 Reports the current plugin version, the list of plugin commands, the current model settings.
 
 
-## Variables Settings
+## 🛠 Variables Settings
 
 - get and set completion background and foreground colors:
   ```viml
@@ -277,7 +278,7 @@ Reports the current plugin version, the list of plugin commands, the current mod
   ```
 
 
-## Other useful vim settings
+## 🛠 Other useful vim settings
 
 - To read all statistics print of your completions:
   ```viml
