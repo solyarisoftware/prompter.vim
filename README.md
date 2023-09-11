@@ -9,10 +9,10 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
-⚠ prompter.vim is not primarily designed as a code completion tool, 
-although you can use it for that purpose. 
-Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
-intended for prompt engineers who want to test and debug natural language prompts.
+> ⚠ prompter.vim is not primarily designed as a code completion tool, 
+> although you can use it for that purpose. 
+> Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
+> intended for prompt engineers who want to test and debug natural language prompts.
 
 ## Usage 
 
@@ -88,15 +88,15 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
   To use a chat completion mode, the model must support that mode, trough specific API.
 
- ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
-avoiding the complications of the chat roles. 
-So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "simulates" 
-to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
-See also this 
-[discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
-I'm aware that using a chat-based model as a text-based model, as described above, 
-is not the optimal usage, but it's a compromise between the simplicity of 
-having a single text completion playground and the complexity of managing chat roles.
+> ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
+> avoiding the complications of the chat roles. 
+> So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "simulates" 
+> to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
+> See also this 
+> [discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
+> I'm aware that using a chat-based model as a text-based model, as described above, 
+> is not the optimal usage, but it's a compromise between the simplicity of 
+> having a single text completion playground and the complexity of managing chat roles.
 
 
 ## 📦 Install
@@ -163,8 +163,8 @@ export OPENAI_MAX_TOKENS=1000
 export OPENAI_STOP="a:"
 ```
 
-💡 A good idea is to edit and keep all variables above in a hidden file, e.g. `vi ~/.prompter.vim`,
-and execute it with `source ~/.prompter.vim`
+> 💡 A good idea is to edit and keep all variables above in a hidden file, e.g. `vi ~/.prompter.vim`,
+> and execute it with `source ~/.prompter.vim`
 
 
 ## 👊 Commands
@@ -239,8 +239,9 @@ The statistics reports these variables:
 - **Chars**, the number of character in the completions
 - **Lines**: the number of lines generated in the completion 
 
-🚀 By default the command is assigned to the function key `F12`. 
-In such a way you can run the completion just pressingto the single keystroke `F12`.
+> 🚀 By default the command is assigned to the function key `F12`. 
+> In such a way you can run the completion just pressing the single keystroke `F12`.
+
 
 ### `PrompterInfo`
 
@@ -301,7 +302,7 @@ Reports the current plugin version, the list of plugin commands, the current mod
 
 - How to see what mapping for a particular key, e.g. `F12`:
   ```viml
-  map <F12>
+    map <F12>
   ```
 
 - You can assign the commands like `:PrompterComplete` to any key mappings of your preference, by example:
@@ -422,6 +423,7 @@ These vim comands could be useful:
 
 
 ## 👏 Acknowledgements
+
 Thanks you to [David Shapiro](https://github.com/daveshap) huge dissemination work on LLMs and generative AI. 
 I have followed with enthusiasm especially his LLM prompt engineering live coding [youtube videos](https://www.youtube.com/@4IR.David.Shapiro)! 
 
