@@ -8,11 +8,16 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
-## How it works
+⚠ prompter.vim is not primarily designed as a code completion tool, 
+although you can use it for that purpose. 
+Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
+intended for prompt engineers who want to test and debug natural language prompts.
 
-1. set your variable environment to configure model and settings
-2. run `:PrompterSetup`
-3. edit your prompt 
+## Usage 
+
+1. Install and set your variable environment to configure model and settings
+2. Run `:PrompterSetup`
+3. Edit your prompt
 4. Press `<F12>` to get the LLM completion
 5. Enjoy your prompt engineering!
 
@@ -61,7 +66,7 @@ Undertaking all of this with web playgrounds is a cumbersome and error-prone pro
 The final thought was: what if I could run my completion directly inside mt vim editor?
 
 
-## ⚠️  Completion modes: `text` versus `chat`
+## `text` completion or `chat` completion?
 There are two common "completion modes" foreseen in OpenAI or similar current LLMs:
 
 - **`text` completion**
@@ -69,21 +74,28 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   Completion mode set as `text` means that LLM completes,
   the given context window prompt text with a completion text (text in -> text out).
   An example of such a model setting is the `text-da-vinci-003` OpenAI model.
-  To use a text completion mode, the model must support that mode trough specific API.
+  To use a text completion mode, the model must support that mode through a specific API.
   
 - **`chat` completion**
 
   Completion mode set as `chat` means that LLM s fine-tuned for chat "roles" 
-  (user say, assistant say, ...).  
+  (user say, assistant say, ...). 
+  Fore details, please read [this](https://platform.openai.com/docs/guides/gpt/chat-completions-api).
   The context window prompt is in fact made by 
-  a "system prompt" and a list of user and assistant messages.
+  - a "system prompt" and 
+  - a list of "user" and "assistant" messages.
   An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
   To use a chat completion mode, the model must support that mode, trough specific API.
 
-⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
+ ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 avoiding the complications of the chat roles. 
-So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "faked" 
+So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "simulates" 
 to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
+See also this 
+[discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
+I'm aware that using a chat-based model as a text-based model, as described above, 
+is not the optimal usage, but it's a compromise between the simplicity of 
+having a single text completion playground and the complexity of managing chat roles.
 
 
 ## 📦 Install
@@ -271,6 +283,15 @@ Reports the current plugin version, the list of plugin commands, the current mod
   ```viml
   messages
   ```
+  vim will show last completion statistics info. By example, if you just run 3 completions: 
+  ```
+  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500 stop: u:
+  Latency: 961ms (1.0s) Tokens: 616 (prompt: 577 completion: 39) Throughput: 641 Words: 21 Chars: 134
+  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500 stop: u:
+  Latency: 368ms (0.4s) Tokens: 648 (prompt: 642 completion: 6) Throughput: 1761 Words: 2 Chars: 15
+  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500 stop: u:
+  Latency: 4227ms (4.2s) Tokens: 775 (prompt: 660 completion: 115) Throughput: 183 Words: 60 Chars: 377, Lines: 5
+  ```
 
 - Enabling Soft Wrap
   ```viml
@@ -383,15 +404,25 @@ These vim comands could be useful:
   The highlight  could forsee all completions or it could be avoided optionally.
 
 - [ ] **Streaming support**
+
   So far streaming completion is not take in consideration. 
 
-## 👏 Acknowledgements
-Thanks you to [David Shapiro](https://github.com/daveshap) huge dissemination work on LLMs and generative AI. 
-I have followed with enthusiasm especially his LLM prompt engineering live coding [youtube videos](https://www.youtube.com/@4IR.David.Shapiro)! 
 
 ## Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
+  Very similar to prompter.vim. Nevertheless it's focused on code completion allowing small prompts from the command line.
+- [llm.nvim](https://github.com/gsuuon/llm.nvim) 
+  Just for neovim. Pretty similar to prompter.vim in the concept, but more oriented to code completions 
+- [llm.nvim](https://github.com/huggingface/llm.nvim)
+  just for neovim. It works with huggingface inference APis. 
+- [copilot.vim](https://github.com/github/copilot.vim)
+  Neovim plugin for GitHub Copilot
+
+
+## 👏 Acknowledgements
+Thanks you to [David Shapiro](https://github.com/daveshap) huge dissemination work on LLMs and generative AI. 
+I have followed with enthusiasm especially his LLM prompt engineering live coding [youtube videos](https://www.youtube.com/@4IR.David.Shapiro)! 
 
 
 ## ⭐️ Status / How to contribute
