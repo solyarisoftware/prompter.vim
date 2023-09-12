@@ -187,11 +187,11 @@ You can run commands in vim command mode (`:`) or the associated key:
 | `:PrompterRegenerate`| `<F8>` | Redo the LLM text completion              |
 | `:PrompterInfo`      | `<F10>`| Report current configuration              |
 
-### `PrompterSetup`
+### `:PrompterSetup`
 
 When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
 ```viml
-PrompterSetup
+:PrompterSetup
 ```
 Following the environment settings, if successful, the command print in the status line the model configurations:
 ```
@@ -214,11 +214,11 @@ Model:│azure│/│gpt-35-turbo│ completion mode:│chat│ temperature:│0
          └───────────── name of the LLM provider
 ```
 
-### `PrompterGenerate`
+### `:PrompterGenerate`
 
 Edit your prompt on a vim windows, and to run the LLM completion just  
 ```viml
-PrompterGenerate
+:PrompterGenerate
 ```
 the status line report some statistics:
 ```
@@ -260,12 +260,12 @@ The statistics reports these variables:
 > In such a way you can run the completion just pressing the single keystroke `F12`.
 
 
-### `PrompterInfo`
+### `:PrompterInfo`
 
 Reports the current plugin version, the list of plugin commands, the current model settings.
 
 ```viml
-PrompterSetup
+:PrompterInfo
 ```
 the command print these info:
 ```
