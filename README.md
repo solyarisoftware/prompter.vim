@@ -384,13 +384,13 @@ let g:stop = ['u:']
 
 These vim comands could be useful:
 
-- Add a new line beginning with `u: `, just pressing  the key `F9`:
+- Add a new line beginning with `u: `, just pressing  the key `F6`:
   ```viml
-  map <F9> :normal ou: <CR> 
+  map <F6> :normal ou: <CR> 
   ```
-- Add a new line beginning with `a: `, just pressing  the key `F10`:
+- Add a new line beginning with `a: `, just pressing  the key `F7`:
   ```viml
-  map <F10> :normal oa: <CR> 
+  map <F7> :normal oa: <CR> 
   ```
 
 
