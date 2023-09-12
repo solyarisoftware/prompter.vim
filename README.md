@@ -264,6 +264,23 @@ The statistics reports these variables:
 
 Reports the current plugin version, the list of plugin commands, the current model settings.
 
+```viml
+PrompterSetup
+```
+the command print these info:
+```
+Version:
+prompter.vim, by giorgio.robino@gmail.com, version 0.1 (September 2nd, 2023)
+
+Model:
+Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500
+
+Commands:
+PrompterGenerate   <F12>
+PrompterRegenerate <F8>
+PrompterInfo       <F10>
+PrompterSetup      <F9>
+```
 
 ## 🛠 Variables Settings
 
