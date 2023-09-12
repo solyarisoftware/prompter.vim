@@ -7,7 +7,7 @@ import calculate_latency
 import utils
 
 
-def complete(
+def generate(
     prompt: str,
     llm_provider: str,
     model_or_deployment: str,
@@ -16,7 +16,7 @@ def complete(
     max_tokens: int = openai_setup.MAX_TOKENS,
     stop: [str] = openai_setup.STOP
 ) -> Tuple[str, str]:
-    ''' call the openai completion service '''
+    ''' call the openai chat completion service or text completion service '''
 
     if completion_mode == openai_setup.CHAT_COMPLETION_MODE:
         return openai_chat_completion(
@@ -146,6 +146,7 @@ if __name__ == '__main__':
 
     prompt = 'La città soprannominata "la superba", in una parola, è'
 
+    '''
     completion, report = openai_text_completion(
         prompt=prompt,
         llm_provider=defaults.llm_provider,
@@ -156,6 +157,7 @@ if __name__ == '__main__':
     print('' + completion)
     print('' + report)
     print()
+    '''
 
     completion, report = openai_chat_completion(
         prompt=prompt,

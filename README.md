@@ -1,6 +1,6 @@
 # prompter.vim
 
-Use vim as a tool for efficiently design, debug and save your LLMs prompts!
+Use vim as a tool for efficiently design, debug and save your LLMs prompts.
 
 Transform the Vim editor into an efficient prompt engineering environment,
 effectively replacing proprietary providers Large Language Models (LLMs) web playgrounds like:
@@ -17,10 +17,11 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 ## Usage 
 
 1. Install and set your variable environment to configure model and settings
-2. Run `:PrompterSetup`
+2. Press `<F9>` (`:PrompterSetup`) 
 3. Edit your prompt
-4. Press `<F12>` to get the LLM completion
-5. Enjoy your prompt engineering!
+4. Press `<F12>`  (`:Promptergenerate`) to get the LLM completion
+5. Goto step 3 to adjust your prompt
+6. Save your prompt (and completions) into a snapshot file
 
 ![alt text](screens/screenshot.1.png)
 
@@ -39,7 +40,7 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
   support last completion color highlight.
 
 
-## 🙄 Backstory
+## Backstory
 
 The idea emerged as I was writing LLM prompts, experimenting with some
 prompt engineering techniques, using a simple "text completion" approach where 
@@ -197,11 +198,11 @@ Model:│azure│/│gpt-35-turbo│ completion mode:│chat│ temperature:│0
          └───────────── name of the LLM provider
 ```
 
-### `PrompterComplete`
+### `PrompterGenerate`
 
 Edit your prompt on a vim windows, and to run the LLM completion just  
 ```viml
-PrompterComplete
+PrompterGenerate
 ```
 the status line report some statistics:
 ```
@@ -259,10 +260,10 @@ Reports the current plugin version, the list of plugin commands, the current mod
   let g:prompter_completion_ctermfg = 0
   ```
 
-  💡 If you don't like the default highlight colors, 
-  you can replace `ctermbg` and `ctermfg` values using a subset of cterm/xterm 256 colors.
-  To show all colors available you can use the command `:HighlightColors` part of my plugin: 
-  [Highlight](https://github.com/solyarisoftware/Highlight.vim).
+  > 💡 If you don't like the default highlight colors, 
+  > you can replace `ctermbg` and `ctermfg` values using a subset of cterm/xterm 256 colors.
+  > To show all colors available you can use the command `:HighlightColors` part of my plugin: 
+  > [Highlight](https://github.com/solyarisoftware/Highlight.vim).
 
 - To modify the temperature value
   ```viml
@@ -305,9 +306,9 @@ Reports the current plugin version, the list of plugin commands, the current mod
     map <F12>
   ```
 
-- You can assign the commands like `:PrompterComplete` to any key mappings of your preference, by example:
+- You can assign the commands like `:PrompterGenerate` to any key mappings of your preference, by example:
   ```vim
-  map <F2> :PrompterComplete<CR>
+  map <F2> :PrompterGenerate<CR>
   ```
 
 - mark placeholders
@@ -410,7 +411,7 @@ These vim comands could be useful:
   So far streaming completion is not take in consideration. 
 
 
-## Similar projects
+## 🙄 Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
   Very similar to prompter.vim. Nevertheless it's focused on code completion allowing small prompts from the command line.
@@ -424,11 +425,14 @@ These vim comands could be useful:
 
 ## 👏 Acknowledgements
 
-Thanks you to [David Shapiro](https://github.com/daveshap) huge dissemination work on LLMs and generative AI. 
-I have followed with enthusiasm especially his LLM prompt engineering live coding [youtube videos](https://www.youtube.com/@4IR.David.Shapiro)! 
+- [David Shapiro](https://github.com/daveshap) for his huge dissemination work on LLMs and generative AI. 
+  I have followed with enthusiasm especially his LLM prompt engineering live coding [youtube videos](https://www.youtube.com/@4IR.David.Shapiro)! 
 
+- [Vivian De Smedt](https://vi.stackexchange.com/users/23502/vivian-de-smedt) 
+  vim expert for his help solving an [issue](https://vi.stackexchange.com/questions/43001/how-can-i-match-a-regexp-containing-newlines/43002#43002)
+  encountered when devloping this plugin.
 
-## ⭐️ Status / How to contribute
+## 🙏 Status / How to contribute
 
 This project is work-in-progress proof-of-concept alfa version!
 
@@ -436,8 +440,7 @@ I'm not a vimscript expert, so any contribute or suggestion is welcome.
 For any proposal and issue, please submit here on github issues for bugs, suggestions, etc.
 You can also contact me via email (giorgio.robino@gmail.com).
 
-
-**🙏 IF YOU LIKE THE PROJECT, PLEASE ⭐️STAR THIS REPOSITORY TO SHOW YOUR SUPPORT!**
+**IF YOU LIKE THE PROJECT, PLEASE ⭐️STAR THIS REPOSITORY TO SHOW YOUR SUPPORT!**
 
 
 ## MIT LICENSE

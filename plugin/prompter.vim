@@ -4,10 +4,15 @@ if !has('python3')
   finish
 endif
 
-" set default kay mappings
-let g:prompter_complete_keystroke = '<F12>'
-let g:prompter_setup_keystroke = '<F11>'
+" set default key mappings
+" they will be activated by command PrompterSetup
+let g:prompter_generate_keystroke = '<F12>'
+let g:prompter_regenerate_keystroke = '<F11>'
 let g:prompter_info_keystroke = '<F10>'
+let g:prompter_setup_keystroke = '<F9>'
+
+" immediate shortcut for PrompterSetup itself
+map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'
 
 " set completion highlight default colors,  
 " orange = 3. green = 10
@@ -64,7 +69,8 @@ echo(
 )
 
 echo('\nKey Mappings:')
-echo(vim.eval('g:prompter_complete_keystroke') + ' PrompterComplete')
+echo(vim.eval('g:prompter_generate_keystroke') + ' PrompterGenerate')
+echo(vim.eval('g:prompter_regenerate_keystroke') + ' PrompterRegenerate')
 echo(vim.eval('g:prompter_info_keystroke') + ' PrompterInfo')
 echo(vim.eval('g:prompter_setup_keystroke') + ' PrompterSetup')
 
@@ -81,7 +87,8 @@ from openai_setup import setup, CHAT_COMPLETION_MODE
 from vim_utils import info, error
 
 # set default key mappings
-vim.command("execute 'map ' . g:prompter_complete_keystroke . ' :PrompterComplete<CR>'")
+vim.command("execute 'map ' . g:prompter_generate_keystroke . ' :PrompterGenerate<CR>'")
+vim.command("execute 'map ' . g:prompter_regenerate_keystroke . ' :PrompterRegenerate<CR>'")
 vim.command("execute 'map ' . g:prompter_info_keystroke . ' :PrompterInfo<CR>'")
 vim.command("execute 'map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'")
 
@@ -123,7 +130,7 @@ EOF
 endfunction
 
 
-function! Completion()
+function! Generate()
 python3 << EOF
 import vim
 import sys
@@ -167,7 +174,7 @@ if settings_available:
       )
   )
 
-  completion_text, completion_statistics = openai_completions.complete(
+  completion_text, completion_statistics = openai_completions.generate(
       prompt,
       llm_provider,
       model_or_deployment,
@@ -199,8 +206,8 @@ if settings_available:
   # https://vi.stackexchange.com/questions/43001/how-can-i-match-a-regexp-containing-newlines/43002#43002
   ctermbg = vim.eval('g:prompter_completion_ctermbg')
   ctermfg = vim.eval('g:prompter_completion_ctermfg')
-  vim.command(f'highlight PrompterCompletion ctermbg={ctermbg} ctermfg={ctermfg}')
-  vim.command("execute 'match PrompterCompletion /' . substitute(g:last_completion_text, \"[\\n\\<C-m>]\", '\\\\n', 'g') . '/' ")
+  vim.command(f'highlight PrompterGenerate ctermbg={ctermbg} ctermfg={ctermfg}')
+  vim.command("execute 'match PrompterGenerate /' . substitute(g:last_completion_text, \"[\\n\\<C-m>]\", '\\\\n', 'g') . '/' ")
 
   # show the end of completion (go to the end of the buffer)
   vim.command('$')
@@ -213,4 +220,5 @@ endfunction
 "
 command! PrompterSetup call Setup()
 command! PrompterInfo call Info()
-command! PrompterComplete call Completion()
+command! PrompterGenerate call Generate()
+command! PrompterRegenerate :execute 'normal u' | PrompterGenerate 
