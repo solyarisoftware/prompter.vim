@@ -102,17 +102,22 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
 
 ## 📦 Install
 
-This pluguin is made in Python3. Check if your vim installation support Python3 
+1. This pluguin is made in Python3. Check if your vim installation support Python3: 
 
-```bash
-vim --version | grep "+python3"
-```
+   ```bash
+   vim --version | grep "+python3"
+   ```
 
-Install the plugin using your preferred plugin manager, e.g. using vim-plug plug-in manager, 
-insert in your `.vimrc` file:
-```viml
-Plug 'solyarisoftware/prompter.vim'
-```
+2. Install Python module openai: 
+   ```bash
+   pip install -U openai 
+   ```
+
+3. Install the plugin using your preferred plugin manager, 
+   e.g. using vim-plug plug-in manager, insert in your `.vimrc` file:
+   ```viml
+   Plug 'solyarisoftware/prompter.vim'
+   ```
 
 
 ## 🔑 Environment Variables Setup 
@@ -169,7 +174,14 @@ export OPENAI_STOP="a:"
 
 
 ## 👊 Commands
-In vim command mode (:) these commands are available:
+
+You can run commands in vim command mode (:) or quth associate key:
+| Command              | Key    | What                                      |
+|----------------------|--------|-------------------------------------------|
+| `:PrompterSetup`     | `<F9>` | Model setup and initial configurations    |
+| `:PrompterGenerate`  | `<F12>`| Run the LLM text completion               |
+| `:PrompterRegenerate`| `<F8>` | Redo the LLM text completion              |
+| `:PrompterInfo`      | `<F10>`| Report current configuration              |
 
 ### `PrompterSetup`
 

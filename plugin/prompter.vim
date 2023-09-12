@@ -6,13 +6,11 @@ endif
 
 " set default key mappings
 " they will be activated by command PrompterSetup
-let g:prompter_generate_keystroke = '<F12>'
-let g:prompter_regenerate_keystroke = '<F11>'
 let g:prompter_info_keystroke = '<F10>'
 let g:prompter_setup_keystroke = '<F9>'
 
 " immediate shortcut for PrompterSetup itself
-map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'
+execute 'map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'
 
 " set completion highlight default colors,  
 " orange = 3. green = 10
