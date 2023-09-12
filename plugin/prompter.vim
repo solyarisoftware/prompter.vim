@@ -6,8 +6,10 @@ endif
 
 " set default key mappings
 " they will be activated by command PrompterSetup
-let g:prompter_info_keystroke = '<F10>'
 let g:prompter_setup_keystroke = '<F9>'
+let g:prompter_info_keystroke = '<F10>'
+let g:prompter_generate_keystroke =  '<F12>'
+let g:prompter_regenerate_keystroke =  '<F8>'
 
 " immediate shortcut for PrompterSetup itself
 execute 'map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'
@@ -66,11 +68,11 @@ echo(
     )
 )
 
-echo('\nKey Mappings:')
-echo(vim.eval('g:prompter_generate_keystroke') + ' PrompterGenerate')
-echo(vim.eval('g:prompter_regenerate_keystroke') + ' PrompterRegenerate')
-echo(vim.eval('g:prompter_info_keystroke') + ' PrompterInfo')
-echo(vim.eval('g:prompter_setup_keystroke') + ' PrompterSetup')
+echo('\nCommands:')
+echo('PrompterGenerate   ' + vim.eval('g:prompter_generate_keystroke'))
+echo('PrompterRegenerate ' + vim.eval('g:prompter_regenerate_keystroke'))
+echo('PrompterInfo       ' + vim.eval('g:prompter_info_keystroke'))
+echo('PrompterSetup      ' + vim.eval('g:prompter_setup_keystroke'))
 
 EOF
 endfunction

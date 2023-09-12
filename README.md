@@ -9,11 +9,6 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
-> ⚠ prompter.vim is not primarily designed as a code completion tool, 
-> although you can use it for that purpose. 
-> Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
-> intended for prompt engineers who want to test and debug natural language prompts.
-
 ## Usage 
 
 1. Install and set your variable environment to configure model and settings
@@ -39,12 +34,18 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - **Completion Highlight**:
   support last completion color highlight.
 
+> ⚠ prompter.vim is not primarily designed as a code completion tool, 
+> although you can use it for that purpose. 
+>
+> Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
+> intended for prompt engineers who want to test and debug natural language prompts.
+
 
 ## Backstory
 
-The idea emerged as I was writing LLM prompts, experimenting with some
-prompt engineering techniques, using a simple "text completion" approach where 
-you write your text prompt corpus and then request a Large Language Model (LLM) completion. 
+The idea emerged while I was writing LLM prompts and experimenting with prompt engineering techniques. 
+I was using a straightforward "text completion" approach, 
+where you input your text prompt corpus and request a completion from a Large Language Model (LLM).
 
 My initial approach was to utilize the web playgrounds offered by LLM providers.
 However, I encountered numerous issues especially while interacting
@@ -68,7 +69,7 @@ Undertaking all of this with web playgrounds is a cumbersome and error-prone pro
 The final thought was: what if I could run my completion directly inside mt vim editor?
 
 
-## `text` completion or `chat` completion?
+## 🙄 `text` completion or `chat` completion?
 There are two common "completion modes" foreseen in OpenAI or similar current LLMs:
 
 - **`text` completion**
@@ -84,17 +85,19 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   (user say, assistant say, ...). 
   Fore details, please read [this](https://platform.openai.com/docs/guides/gpt/chat-completions-api).
   The context window prompt is in fact made by 
-  - a "system prompt" and 
+  - a "system prompt"  
   - a list of "user" and "assistant" messages.
   An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
   To use a chat completion mode, the model must support that mode, trough specific API.
 
 > ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 > avoiding the complications of the chat roles. 
+>
 > So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "simulates" 
 > to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
 > See also this 
 > [discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
+>
 > I'm aware that using a chat-based model as a text-based model, as described above, 
 > is not the optimal usage, but it's a compromise between the simplicity of 
 > having a single text completion playground and the complexity of managing chat roles.
@@ -175,8 +178,9 @@ export OPENAI_STOP="a:"
 
 ## 👊 Commands
 
-You can run commands in vim command mode (:) or quth associate key:
-| Command              | Key    | What                                      |
+You can run commands in vim command mode (`:`) or the associated key:
+
+| Command              | Key 🚀 | Action                                    |
 |----------------------|--------|-------------------------------------------|
 | `:PrompterSetup`     | `<F9>` | Model setup and initial configurations    |
 | `:PrompterGenerate`  | `<F12>`| Run the LLM text completion               |
@@ -245,14 +249,14 @@ Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│)
 ```
 
 The statistics reports these variables:
-- **Latency**: bot in milliseconds and second approximations
-- **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal
-- **Throughput**: this is the completion Tokens / latency ratio (in seconds)
-- **Words**, the number of words generated in the completion
-- **Chars**, the number of character in the completions
-- **Lines**: the number of lines generated in the completion 
+- **Latency**: bot in milliseconds and second approximation. In the example above: `1480ms (1.5s)`
+- **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal. In the example above: `228`
+- **Throughput**: this is the completion Tokens / latency ratio (in seconds). In the example above, 1480/228=~: `154`
+- **Words**, the number of words generated in the completion. In the example above: `28`
+- **Chars**, the number of character in the completion. In the example above: `176`
+- **Lines**: the number of lines generated in the completion.  In the example above: `7`
 
-> 🚀 By default the command is assigned to the function key `F12`. 
+> By default the command is assigned to the function key `F12`. 
 > In such a way you can run the completion just pressing the single keystroke `F12`.
 
 
@@ -272,7 +276,7 @@ Reports the current plugin version, the list of plugin commands, the current mod
   let g:prompter_completion_ctermfg = 0
   ```
 
-  > 💡 If you don't like the default highlight colors, 
+  > If you don't like the default highlight colors, 
   > you can replace `ctermbg` and `ctermfg` values using a subset of cterm/xterm 256 colors.
   > To show all colors available you can use the command `:HighlightColors` part of my plugin: 
   > [Highlight](https://github.com/solyarisoftware/Highlight.vim).
@@ -291,6 +295,20 @@ Reports the current plugin version, the list of plugin commands, the current mod
   let g:stop = ['x:', 'y:', 'z:']
   ```
 
+- Commands are associated to function keys with this default setting:
+
+  ```viml
+  let g:prompter_setup_keystroke = '<F9>'
+  let g:prompter_info_keystroke = '<F10>'
+  let g:prompter_generate_keystroke =  '<F12>'
+  let g:prompter_regenerate_keystroke =  '<F8>'
+  ```
+
+  Even if in vim you can assign a command to a key mapping of your preference, by example:
+  `map <F2> :PrompterGenerate<CR>` and you can see what mapping for a particular key, 
+  e.g. `F2`, you can use the vim command: `map <F12>`, the suggested way to proceed is to modify 
+  one or more of the above mentioned variables and run `:PrompterSetup` again. 
+  
 
 ## 🛠 Other useful vim settings
 
@@ -311,23 +329,6 @@ Reports the current plugin version, the list of plugin commands, the current mod
 - Enabling Soft Wrap
   ```viml
   set wrap linebreak nolist
-  ```
-
-- How to see what mapping for a particular key, e.g. `F12`:
-  ```viml
-    map <F12>
-  ```
-
-- You can assign the commands like `:PrompterGenerate` to any key mappings of your preference, by example:
-  ```vim
-  map <F2> :PrompterGenerate<CR>
-  ```
-
-- mark placeholders
-  ```viml
-  syntax region CustomBraces start=/{/ end=/}/
-  highlight link CustomBraces Statement
-  au BufRead,BufNewFile *.{your-file-extension} set syntax=custom_braces
   ```
 
 
@@ -360,7 +361,7 @@ a:
 In the above case, to set the LLM stop waiting for user input, 
 you could set the stop sequence as `u:` with command: 
 
-```viml
+  ```viml
 let g:stop = ['u:']
 ```
 
@@ -423,7 +424,7 @@ These vim comands could be useful:
   So far streaming completion is not take in consideration. 
 
 
-## 🙄 Similar projects
+## Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
   Very similar to prompter.vim. Nevertheless it's focused on code completion allowing small prompts from the command line.
@@ -442,7 +443,7 @@ These vim comands could be useful:
 
 - [Vivian De Smedt](https://vi.stackexchange.com/users/23502/vivian-de-smedt) 
   vim expert for his help solving an [issue](https://vi.stackexchange.com/questions/43001/how-can-i-match-a-regexp-containing-newlines/43002#43002)
-  encountered when devloping this plugin.
+  encountered when developing this plugin.
 
 ## 🙏 Status / How to contribute
 

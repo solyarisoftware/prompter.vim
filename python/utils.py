@@ -13,12 +13,12 @@ def help():
     return '\n'.join([
         'Version:',
         version(),
-        '',
-        'Commands:',
-        'PrompterSetup    - read OS environment variables',
-        'PrompterComplete - complete the prompt',
-        'PrompterInfo     - some informations (version, commands, current model)',
-        # 'prompterModel    - show model attributes'
+        # '',
+        # 'Commands:',
+        # 'PrompterSetup    - read OS environment variables',
+        # 'PrompterGenerate - trigger the prompt completion',
+        # 'PrompterInfo     - some informations (version, commands, current model)',
+        # 'prompterModel   - show model attributes'
     ])
 
 
