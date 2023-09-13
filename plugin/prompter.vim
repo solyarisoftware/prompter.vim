@@ -160,57 +160,61 @@ except:
 
 # Awful conditional management, but caused by some vimscript/python limits (impossible to return/exit
 if settings_available:
+    #  show model settings as a work in progress message. 
+    #  visible only if latency is greater than hundreds of millisecond 
+    setting = model_settings(
+        llm_provider,
+        model_or_deployment,
+        completion_mode,
+        temperature,
+        max_tokens,
+        stop
+    )
+    progress(f'generating using: {setting}')
 
-  #  show model settings as a work in progress message. 
-  #  visible only if latency is greater than hundreds of millisecond 
-  progress(
-      model_settings(
-          llm_provider,
-          model_or_deployment,
-          completion_mode,
-          temperature,
-          max_tokens,
-          stop
-      )
-  )
+    completion_text, completion_statistics = openai_completions.generate(
+        prompt,
+        llm_provider,
+        model_or_deployment,
+        completion_mode,
+        temperature,
+        max_tokens,
+        stop
+    )
 
-  completion_text, completion_statistics = openai_completions.generate(
-      prompt,
-      llm_provider,
-      model_or_deployment,
-      completion_mode,
-      temperature,
-      max_tokens,
-      stop
-  )
+    # completion tokens are great than max_tokens 
+    if 'length' in completion_statistics:
+        error(completion_statistics)
+    else:
+        info(completion_statistics)
 
-  # completion tokens are great than max_tokens 
-  if 'length' in completion_statistics:
-      error(completion_statistics)
-  else:
-      info(completion_statistics)
+    # vim buffer requires a list of lines (no newlines)
+    # completion_text = completion_text.strip().split('\n')
+    # append the LLM completion to the current buffer, without an initial newline
+    # vim.current.buffer.append(completion_text)
 
-  # vim buffer requires a list of lines (no newlines)
-  # completion_text = completion_text.strip().split('\n')
-  # append the LLM completion to the current buffer, without an initial newline
-  # vim.current.buffer.append(completion_text)
+    # Replace the buffer content with the concatenated text without an initial newline
+    current_buffer = '\n'.join(vim.current.buffer[:]) + completion_text
+    vim.current.buffer[:] = current_buffer.split('\n')
 
-  # Replace the buffer content with the concatenated text without an initial newline
-  current_buffer = '\n'.join(vim.current.buffer[:]) + completion_text
-  vim.current.buffer[:] = current_buffer.split('\n')
+    # highlight completion 
+    vim.command('let g:last_completion_text = "' + completion_text.replace('"', '\\"') + '"')
 
-  # highlight completion 
-  vim.command('let g:last_completion_text = "' + completion_text.replace('"', '\\"') + '"')
+    # highlight completion (multiline) text
+    # https://vi.stackexchange.com/questions/43001/how-can-i-match-a-regexp-containing-newlines/43002#43002
+    ctermbg = vim.eval('g:prompter_completion_ctermbg')
+    ctermfg = vim.eval('g:prompter_completion_ctermfg')
+    vim.command(f'highlight PrompterGenerateGroup ctermbg={ctermbg} ctermfg={ctermfg}')
 
-  # highlight completion (multiline) text
-  # https://vi.stackexchange.com/questions/43001/how-can-i-match-a-regexp-containing-newlines/43002#43002
-  ctermbg = vim.eval('g:prompter_completion_ctermbg')
-  ctermfg = vim.eval('g:prompter_completion_ctermfg')
-  vim.command(f'highlight PrompterGenerate ctermbg={ctermbg} ctermfg={ctermfg}')
-  vim.command("execute 'match PrompterGenerate /' . substitute(g:last_completion_text, \"[\\n\\<C-m>]\", '\\\\n', 'g') . '/' ")
+    # highlighy just the last completion
+    #vim.command("execute 'match PrompterGenerateGroup /' . substitute(g:last_completion_text, \"[\\n\\<C-m>]\", '\\\\n', 'g') . '/' ")
 
-  # show the end of completion (go to the end of the buffer)
-  vim.command('$')
+    # highlight all completions
+    text_to_highlight = "substitute(g:last_completion_text, \"[\\n\\<C-m>]\", '\\\\n', 'g')"
+    vim.command(f'let mid = matchadd(\"PrompterGenerateGroup\", {text_to_highlight})')
+
+    # show the end of completion (go to the end of the buffer)
+    vim.command('$')
 EOF
 endfunction
 

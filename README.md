@@ -9,7 +9,7 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 - [OpenAI Playground](https://platform.openai.com/playground)
 - Other platforms planned for inclusion in future versions of this plugin.
 
-## Usage 
+## How it works 
 
 1. Install and set your variable environment to configure model and settings
 2. Press `<F9>` (`:PrompterSetup`) 
@@ -18,28 +18,28 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 5. Goto step 3 to adjust your prompt
 6. Save your prompt (and completions) into a snapshot file
 
-![alt text](screens/screenshot.1.png)
+![alt text](screens/screenshot.3.png)
+
+
+## ⚠ A Tool for Prompt Engineers, Not Coders!
+
+prompter.vim is not primarily designed as a code completion tool, 
+although you can use it for that purpose. 
+
+Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
+intended for prompt engineers who want to test and debug natural language prompts.
 
 
 ## Features
 
-- **Instant LLM Completion**: 
+- [x] **Instant LLM Completion**: 
   trigger LLM completions with a simple keystroke.
-- **Prompt Interaction**:
-  generate prompts directly in the editor and save them on the fly.
-- **Run-time statistics**:
+- [x] **Run-time statistics**:
   measure completions in terms of latency, used tokens, throughput, etc.
-- **Focused Workflow**:
-  maintain undivided focus within the editor, and seamlessly save all your work to local files.
-- **Completion Highlight**:
-  support last completion color highlight.
-
-> ⚠ prompter.vim is not primarily designed as a code completion tool, 
-> although you can use it for that purpose. 
->
-> Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
-> intended for prompt engineers who want to test and debug natural language prompts.
-
+- [x] **Expolit all editor commodities**:
+  generate prompts whitin the editor and seamlessly save all your work to local files.
+- [x] **Completion Highlight**:
+  support completions color highlight.
 
 ## Backstory
 
@@ -375,14 +375,20 @@ u: that's correct!
 a:
 ```
 
-In the above case, to set the LLM stop waiting for user input, 
+⚠ In the above case, to set the LLM stop waiting for user input, 
 you could set the stop sequence as `u:` with command: 
 
   ```viml
 let g:stop = ['u:']
 ```
 
-These vim comands could be useful:
+💡 Please note if you do not set the stop sequence as described above,
+the LLM will try to complete the entire conversation. 
+Taht's in general not wanted because you want to write the sentence following `u:`.
+Nevertheless it's sometime useful to unset the `g:stop` 
+just to see how the LLM imagine the conversation flow. 
+
+Other vim commands that could be useful:
 
 - Add a new line beginning with `u: `, just pressing  the key `F6`:
   ```viml
@@ -393,52 +399,53 @@ These vim comands could be useful:
   map <F7> :normal oa: <CR> 
   ```
 
+## OS Environment
+
+- 😓 I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
+- 😊 I tested the plugin using Python 3.8.10 and 3.11
+- 🤔 As LLM provider, I tested just using my Azure OpenAI account.
+- 😊 Vim version: VIM - Vi IMproved 9.0
+
 
 ## Features to do in future releases
 
-- [ ] **Support template prompts**
+1. [ ] **Support template prompts**
 
-  You are designing "template prompts"
-  comprised of various parts that can be dynamically constructed at run-time.
-  Consider, for instance, that you wish to prototype a "template prompt"
-  containing placeholder variables, that are references to certain variables
-  filled by other prompts or files, like so:
+   You are designing "template prompts"
+   comprised of various parts that can be dynamically constructed at run-time.
+   Consider, for instance, that you wish to prototype a "template prompt"
+   containing placeholder variables, that are references to certain variables
+   filled by other prompts or files, like so:
+ 
+   ```
+   TASK
+   {some_task_description}
 
-  ```
-  TASK
-  {some_task_description}
+   DATA
+   {some_yaml}
 
-  DATA
-  {some_yaml}
+   DIALOG
+   {dialog_history}
+   ```
 
-  DIALOG
-  {dialog_history}
-  ```
+   In the example above, when using web playgrounds, you function as a copy-paste intermediary. 
+   You are required to open four web tabs, execute text completions in each, 
+   and finally manually paste completions, substituting variables such as `{some_data}`, `{dialog_history}`. 
+   Additionally, you might need to load a file into a variable, like `{some_yaml}`.
 
-  In the example above, when using web playgrounds, you function as a copy-paste intermediary. 
-  You are required to open four web tabs, execute text completions in each, 
-  and finally manually paste completions, substituting variables such as `{some_data}`, `{dialog_history}`. 
-  Additionally, you might need to load a file into a variable, like `{some_yaml}`.
+   The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
+   the variable placeholders, with the content of other buffers/windows.
 
-  The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
-  the variable placeholders, with the content of other buffers/windows.
+2. [ ] **Use LiteLLM as a LLM provider abstraction layer**
 
-- [ ] **Use LiteLLM as a LLM provider abstraction layer**
+   So far prompter.vim support interface with Azure OpenAI or OpenAI native providers.
 
-  So far prompter.vim support interface with Azure OpenAI or OpenAI native providers.
+   [LiteLLM](https://github.com/BerriAI/litellm) could be a better option to use openai API directly.
+   It is a lightweight package to simplify LLM API calls with Azure, OpenAI, Cohere, Anthropic, etc.
 
-  [LiteLLM](https://github.com/BerriAI/litellm) could be a better option to use openai API directly.
-  It is a lightweight package to simplify LLM API calls with Azure, OpenAI, Cohere, Anthropic, etc.
+3. [ ] **Streaming support**
 
-
-- [ ] **Improve highligt colorizing**
-
-  So far just the last completion is colorized.
-  The highlight  could forsee all completions or it could be avoided optionally.
-
-- [ ] **Streaming support**
-
-  So far streaming completion is not take in consideration. 
+   So far streaming completion is not take in consideration. 
 
 
 ## Similar projects
