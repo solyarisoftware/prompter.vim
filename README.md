@@ -78,6 +78,26 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   the given context window prompt text with a completion text (text in -> text out).
   An example of such a model setting is the `text-da-vinci-003` OpenAI model.
   To use a text completion mode, the model must support that mode through a specific API.
+  ```
+                   ┌────────────────────────┐
+               ┌─  │                        │ ─┐
+               │   │                        │  │
+               │   │ bla bla bla            │  │
+               │   │ bla bla                │  │
+    context    │   │ bla bla bla bla        │  │ prompt
+    windows    │   │ bla                    │  │
+       =       │   │ bla bla                │  │
+     prompt    │   │                        │  │
+       +       │   │                        │  │
+   completion  │   │                        │ ─┘
+               │   ├────────────────────────┤
+               │   │                        │ ─┐
+               │   │ bla bla                │  │ 
+               │   │ bla bla bla            │  │ completion
+               │   │ bla                    │  │
+               └─  │                        │ ─┘
+                   └────────────────────────┘
+  ```
   
 - **`chat` completion**
 
@@ -89,6 +109,32 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   - a list of "user" and "assistant" messages.
   An example of such a model setting is the `gpt3.5-turbo` OpenAI model.
   To use a chat completion mode, the model must support that mode, trough specific API.
+  ``` 
+                    ┌────────────────────────┐
+                ┌─  │ bla bla bla bla        │ ─┐
+                │   │ bla bla bla            │  │
+                │   │ bla bla                │  │ system
+                │   │ bla bla bla bla        │  │ prompt
+     context    │   │ bla                    │  │
+     window     │   │ bla bla                │ ─┘
+        =       │   └────────────────────────┘
+  system prompt │   ┌────────────────────────┐
+        +       │   │ user: blablabla        │ ─┐
+   chat prompt  │   ├────────────────────────┤  │
+        +       │   │ assistant: bla bla bla │  │
+    completion  │   ├────────────────────────┤  │ chat
+                │   │ user: bla bla bla      │  │ prompt
+                │   ├────────────────────────┤  │
+                │   │ assistant: blabla bla  │  │
+                │   ├────────────────────────┤  │
+                └─  │ user: blabla bla       │ ─┘
+                    └────────────────────────┘
+                    ┌────────────────────────┐
+                    │                        │ ─┐
+                    │ assistant: bla bla bla │  │ completion
+                    │                        │ ─┘
+                    └────────────────────────┘
+  ```
 
 > ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 > avoiding the complications of the chat roles. 

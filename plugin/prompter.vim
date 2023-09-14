@@ -84,7 +84,9 @@ import vim
 import sys
 sys.path.append(vim.eval('s:python_path'))
 from openai_setup import setup, CHAT_COMPLETION_MODE
-from vim_utils import info, error
+from vim_utils import info, error, progress
+
+progress(f'configuring...')
 
 # set default key mappings
 vim.command("execute 'map ' . g:prompter_generate_keystroke . ' :PrompterGenerate<CR>'")
@@ -162,15 +164,16 @@ except:
 if settings_available:
     #  show model settings as a work in progress message. 
     #  visible only if latency is greater than hundreds of millisecond 
-    setting = model_settings(
-        llm_provider,
-        model_or_deployment,
-        completion_mode,
-        temperature,
-        max_tokens,
-        stop
-    )
-    progress(f'generating using: {setting}')
+    #setting = model_settings(
+    #    llm_provider,
+    #    model_or_deployment,
+    #    completion_mode,
+    #    temperature,
+    #    max_tokens,
+    #    stop
+    #)
+    #progress(f'generating using: {setting}')
+    progress(f'generating...')
 
     completion_text, completion_statistics = openai_completions.generate(
         prompt,
@@ -225,4 +228,6 @@ endfunction
 command! PrompterSetup call Setup()
 command! PrompterInfo call Info()
 command! PrompterGenerate call Generate()
+
+" TODO do not print process text :(
 command! PrompterRegenerate :execute 'normal u' | PrompterGenerate 
