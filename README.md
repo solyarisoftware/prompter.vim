@@ -381,11 +381,8 @@ PrompterSetup      <F9>
   ```
   vim will show last completion statistics info. By example, if you just run 3 completions: 
   ```
-  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500 stop: u:
   Latency: 961ms (1.0s) Tokens: 616 (prompt: 577 completion: 39) Throughput: 641 Words: 21 Chars: 134
-  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500 stop: u:
   Latency: 368ms (0.4s) Tokens: 648 (prompt: 642 completion: 6) Throughput: 1761 Words: 2 Chars: 15
-  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500 stop: u:
   Latency: 4227ms (4.2s) Tokens: 775 (prompt: 660 completion: 115) Throughput: 183 Words: 60 Chars: 377, Lines: 5
   ```
 
