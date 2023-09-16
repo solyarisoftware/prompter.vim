@@ -18,8 +18,12 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 5. Goto step 3 to adjust your prompt
 6. Save your prompt (and completions) into a snapshot file
 
-![alt text](screens/screenshot.3.png)
-
+| ![demo screenshot](screens/screenshot.3.png) |
+|:--:|
+| figure 1: 
+prompter.vim in action editing a prompt to simulate a phone conversation, 
+with the tecnique below described as "dialogues as part of the text prompt"
+|
 
 ## ⚠ A Tool for Prompt Engineers, Not Coders!
 
@@ -303,30 +307,17 @@ Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│)
                                                                  nr. of lines ────────────────────────────────┘
 ```
 
-The statistics reports these variables:
-- [x] **Latency** 
-  bot in milliseconds and second approximation. In the example above: `1480ms (1.5s)`
+The statistics reports these metrics:
 
-- [x] **Tokens**
+| Metric     | Description                                                    | Example       |
+|------------|----------------------------------------------------------------|---------------|
+| Latency    | Bot in milliseconds and second approximation                   | `1480ms (1.5s)`|
+| Tokens     | Total tokens amount, prompt subtotal, and completion subtotal  | `228`         |
+| Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`         |
+| Words      | Number of words generated in the completion                     | `28`          |
+| Chars      | Number of characters in the completion                         | `176`         |
+| Lines      | Number of lines generated in the completion                     | `7`           |
 
-  the total tokens amount, the prompt subtotal and the completion subtotal. In the example above: `228`
-
-- [x] **Throughput**
-
-  this is the completion Tokens / latency ratio (in seconds). In the example above, 1480/228=~: `154`
-  See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306).
-
-- [x] **Words**
-
-  the number of words generated in the completion. In the example above: `28`
-
-- [x] **Chars**
-
-  the number of character in the completion. In the example above: `176`
-
-- [x] **Lines**
-
-  the number of lines generated in the completion.  In the example above: `7`
 
 > By default the command is assigned to the function key `F12`. 
 > In such a way you can run the completion just pressing the single keystroke `F12`.
