@@ -391,6 +391,7 @@ PrompterSetup      <F9>
 ## 🛠 Other useful vim settings
 
 - Use (embedded in vim) spell checker!
+
   When you write a LLM prompt it's very very important to avoid typos! 
   I many time experienced that LLM completion worst if you mistake just a verb.
 
@@ -488,7 +489,7 @@ Other vim commands that could be useful:
 - [x] Vim version: VIM - Vi IMproved 9.0
 - [x] I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
 - [x] I tested the plugin using both Python 3.8.10 and 3.11
-- [ ] As LLM provider, I tested just using my Azure OpenAI account.
+- [x] As LLM provider, I tested just using my Azure OpenAI account.
 - [ ] I din't tested using an OpenAI account.
 
 
