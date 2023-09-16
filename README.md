@@ -20,7 +20,7 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 
 | ![demo screenshot](screens/screenshot.3.png) |
 |:--:|
-| prompter.vim in action editing a prompt to simulate a phone conversation, with the tecnique below described as "dialogues as part of the text prompt" |
+| prompter.vim in action: editing/interacting with a prompt that simulate a phone conversation (with a tecnique below described as "dialogues as part of the text prompt")|
 
 ## ⚠ A Tool for Prompt Engineers, Not Coders!
 
@@ -390,8 +390,28 @@ PrompterSetup      <F9>
 
 ## 🛠 Other useful vim settings
 
-- To read all statistics print of your completions:
+- Use (embedded in vim) spell checker!
+  When you write a LLM prompt it's very very important to avoid typos! 
+  I many time experienced that LLM completion worst if you mistake just a verb.
+
+  Things go even worst if you are writing prompts in more than one languages.
+  personally I usually write conversational prompts in English, for some reasons described in my article
+  [Non-English Languages Prompt Engineering Trade-offs](https://convcomp.it/non-english-languages-prompt-engineering-trade-offs-7e529866faba),
+  but the target langugae of the chat prompt is my native language: Italian. 
+  All in all the prompt contains text in both English and Italian. In this case I run this small vimscript function:
+
   ```viml
+  function! Spell() 
+     set spelllang=en_us,it
+     setlocal spell
+     echom "Spell check set for Italian and English languages"
+  endfunction  
+  com! SPELL call Spell()
+  ```
+
+- To read all statistics print of your completions:
+
+```viml
   messages
   ```
   vim will show last completion statistics info. By example, if you just run 3 completions: 
@@ -402,6 +422,12 @@ PrompterSetup      <F9>
   ```
 
 - Enabling Soft Wrap
+
+  I usually work with a full-screen vim setting. That helps mme to maximize my attention.
+  Nevertheless having very long lines (after a `PrompterGenerate`) doen't help the reading.  
+  Unfortunately, in vim is not easy to configure a fixed column width soft wrap. 
+  See [discussion](https://vi.stackexchange.com/questions/43028/how-to-soft-wrap-text-at-column-number-lower-than-window-width).
+  You can set set soft warp with follwing command:
   ```viml
   set wrap linebreak nolist
   ```
@@ -457,12 +483,13 @@ Other vim commands that could be useful:
   map <F7> :normal oa: <CR> 
   ```
 
-## OS Environment
+## Dev/Test Environment
 
-- 😓 I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
-- 😊 I tested the plugin using Python 3.8.10 and 3.11
-- 🤔 As LLM provider, I tested just using my Azure OpenAI account.
-- 😊 Vim version: VIM - Vi IMproved 9.0
+- [x] Vim version: VIM - Vi IMproved 9.0
+- [x] I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
+- [x] I tested the plugin using both Python 3.8.10 and 3.11
+- [ ] As LLM provider, I tested just using my Azure OpenAI account.
+- [ ] I din't tested using an OpenAI account.
 
 
 ## Features to do in future releases
@@ -509,7 +536,7 @@ Other vim commands that could be useful:
 ## Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
-  Very similar to prompter.vim. Nevertheless it's focused on code completion allowing small prompts from the command line.
+  Very similar to prompter.vim, nevertheless it's focused on code completion allowing small prompts from the command line.
 - [llm.nvim](https://github.com/gsuuon/llm.nvim) 
   Just for neovim. Pretty similar to prompter.vim in the concept, but more oriented to code completions 
 - [llm.nvim](https://github.com/huggingface/llm.nvim)
