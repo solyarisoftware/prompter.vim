@@ -90,7 +90,12 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
      prompt    │   │                        │  │
        +       │   │                        │  │
    completion  │   │                        │ ─┘
-               │   ├────────────────────────┤
+               │   └────────────────────────┘
+               │              |
+               │        LLM generation
+               │              |
+               │              v
+               │   ┌────────────────────────┐
                │   │                        │ ─┐
                │   │ bla bla                │  │ 
                │   │ bla bla bla            │  │ completion
@@ -127,11 +132,15 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
                 │   ├────────────────────────┤  │
                 │   │ assistant: blabla bla  │  │
                 │   ├────────────────────────┤  │
-                └─  │ user: blabla bla       │ ─┘
-                    └────────────────────────┘
-                    ┌────────────────────────┐
-                    │                        │ ─┐
-                    │ assistant: bla bla bla │  │ completion
+                │   │ user: blabla bla       │ ─┘
+                │   └────────────────────────┘
+                │              |
+                │        LLM generation
+                │              |
+                │              v
+                │   ┌────────────────────────┐
+                │   │                        │ ─┐
+                └─  │ assistant: bla bla bla │  │ completion
                     │                        │ ─┘
                     └────────────────────────┘
   ```
@@ -295,12 +304,29 @@ Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│)
 ```
 
 The statistics reports these variables:
-- **Latency**: bot in milliseconds and second approximation. In the example above: `1480ms (1.5s)`
-- **Tokens**: the total tokens amount, the prompt subtotal and the completion subtotal. In the example above: `228`
-- **Throughput**: this is the completion Tokens / latency ratio (in seconds). In the example above, 1480/228=~: `154`
-- **Words**, the number of words generated in the completion. In the example above: `28`
-- **Chars**, the number of character in the completion. In the example above: `176`
-- **Lines**: the number of lines generated in the completion.  In the example above: `7`
+- [x] **Latency** 
+  bot in milliseconds and second approximation. In the example above: `1480ms (1.5s)`
+
+- [x] **Tokens**
+
+  the total tokens amount, the prompt subtotal and the completion subtotal. In the example above: `228`
+
+- [x] **Throughput**
+
+  this is the completion Tokens / latency ratio (in seconds). In the example above, 1480/228=~: `154`
+  See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306).
+
+- [x] **Words**
+
+  the number of words generated in the completion. In the example above: `28`
+
+- [x] **Chars**
+
+  the number of character in the completion. In the example above: `176`
+
+- [x] **Lines**
+
+  the number of lines generated in the completion.  In the example above: `7`
 
 > By default the command is assigned to the function key `F12`. 
 > In such a way you can run the completion just pressing the single keystroke `F12`.
