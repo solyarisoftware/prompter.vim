@@ -20,10 +20,7 @@ effectively replacing proprietary providers Large Language Models (LLMs) web pla
 
 | ![demo screenshot](screens/screenshot.3.png) |
 |:--:|
-| figure 1: 
-prompter.vim in action editing a prompt to simulate a phone conversation, 
-with the tecnique below described as "dialogues as part of the text prompt"
-|
+| prompter.vim in action editing a prompt to simulate a phone conversation, with the tecnique below described as "dialogues as part of the text prompt" |
 
 ## ⚠ A Tool for Prompt Engineers, Not Coders!
 
@@ -83,29 +80,29 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   An example of such a model setting is the `text-da-vinci-003` OpenAI model.
   To use a text completion mode, the model must support that mode through a specific API.
   ```
-                   ┌────────────────────────┐
-               ┌─  │                        │ ─┐
-               │   │                        │  │
-               │   │ bla bla bla            │  │
-               │   │ bla bla                │  │
-    context    │   │ bla bla bla bla        │  │ prompt
-    windows    │   │ bla                    │  │
-       =       │   │ bla bla                │  │
-     prompt    │   │                        │  │
-       +       │   │                        │  │
-   completion  │   │                        │ ─┘
-               │   └────────────────────────┘
-               │              |
-               │        LLM generation
-               │              |
-               │              v
-               │   ┌────────────────────────┐
-               │   │                        │ ─┐
-               │   │ bla bla                │  │ 
-               │   │ bla bla bla            │  │ completion
-               │   │ bla                    │  │
-               └─  │                        │ ─┘
-                   └────────────────────────┘
+                    ┌────────────────────────┐
+                ┌─  │                        │ ─┐
+                │   │                        │  │
+                │   │ bla bla bla            │  │
+                │   │ bla bla                │  │
+     context    │   │ bla bla bla bla        │  │ prompt
+     windows    │   │ bla                    │  │
+        =       │   │ bla bla                │  │
+      prompt    │   │                        │  │
+        +       │   │                        │  │
+    completion  │   │                        │ ─┘
+                │   └────────────────────────┘
+                │               |
+                │         LLM generation
+                │               |
+                │               v
+                │   ┌────────────────────────┐
+                │   │                        │ ─┐
+                │   │ bla bla                │  │ 
+                │   │ bla bla bla            │  │ completion
+                │   │ bla                    │  │
+                └─  │                        │ ─┘
+                    └────────────────────────┘
   ```
   
 - **`chat` completion**
@@ -138,10 +135,10 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
                 │   ├────────────────────────┤  │
                 │   │ user: blabla bla       │ ─┘
                 │   └────────────────────────┘
-                │              |
-                │        LLM generation
-                │              |
-                │              v
+                │               |
+                │         LLM generation
+                │               |
+                │               v
                 │   ┌────────────────────────┐
                 │   │                        │ ─┐
                 └─  │ assistant: bla bla bla │  │ completion
@@ -279,10 +276,12 @@ Edit your prompt on a vim windows, and to run the LLM completion just
 ```viml
 :PrompterGenerate
 ```
-the status line report some statistics:
+The status line report some statistics:
+
 ```
 Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
 ```
+
 Explanation of values in the status line report:
 ```
           ┌─ latency in milliseconds and seconds
@@ -309,15 +308,14 @@ Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│)
 
 The statistics reports these metrics:
 
-| Metric     | Description                                                    | Example       |
-|------------|----------------------------------------------------------------|---------------|
-| Latency    | Bot in milliseconds and second approximation                   | `1480ms (1.5s)`|
-| Tokens     | Total tokens amount, prompt subtotal, and completion subtotal  | `228`         |
-| Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`         |
-| Words      | Number of words generated in the completion                     | `28`          |
-| Chars      | Number of characters in the completion                         | `176`         |
-| Lines      | Number of lines generated in the completion                     | `7`           |
-
+| Metric     | Description                                                    | Example            |
+|------------|----------------------------------------------------------------|--------------------|
+| Latency    | Bot in milliseconds and second approximation                   | `1480ms (1.5s)`    |
+| Tokens     | Total tokens amount, prompt subtotal, and completion subtotal  | `228`              |
+| Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`              |
+| Words      | Number of words generated in the completion                    | `28`               |
+| Chars      | Number of characters in the completion                         | `176`              |
+| Lines      | Number of lines generated in the completion                    | `7`                |
 
 > By default the command is assigned to the function key `F12`. 
 > In such a way you can run the completion just pressing the single keystroke `F12`.
