@@ -390,7 +390,7 @@ PrompterSetup      <F9>
 
 ## 🛠 Other useful vim settings
 
-- Use (embedded in vim) spell checker!
+- Use (vim-included) spell checker
 
   When you write a LLM prompt it's very very important to avoid typos! 
   I many time experienced that LLM completion worst if you mistake just a verb.
@@ -410,9 +410,9 @@ PrompterSetup      <F9>
   com! SPELL call Spell()
   ```
 
-- To read all statistics print of your completions:
+- Read all your previous completion statisctics
 
-```viml
+  ```viml
   messages
   ```
   vim will show last completion statistics info. By example, if you just run 3 completions: 
@@ -422,7 +422,7 @@ PrompterSetup      <F9>
   Latency: 4227ms (4.2s) Tokens: 775 (prompt: 660 completion: 115) Throughput: 183 Words: 60 Chars: 377, Lines: 5
   ```
 
-- Enabling Soft Wrap
+- Enabling lines soft wrap
 
   I usually work with a full-screen vim setting. That helps mme to maximize my attention.
   Nevertheless having very long lines (after a `PrompterGenerate`) doen't help the reading.  
