@@ -534,6 +534,12 @@ Other vim commands that could be useful:
    So far streaming completion is not take in consideration. 
 
 
+## Known issues
+- in command Promptergenerate, some characters (to be defined) broke the highlight matchadd regexp. 
+  This imply that highlight doesn't work and/or a runtime error is gtenerated. 
+  Nevertheless the generation is done. To be investigated.
+
+
 ## Similar projects
 
 - [vim-ai](https://github.com/madox2/vim-ai)
