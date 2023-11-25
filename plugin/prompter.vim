@@ -9,7 +9,7 @@ endif
 let g:prompter_setup_keystroke = '<F9>'
 let g:prompter_info_keystroke = '<F10>'
 let g:prompter_generate_keystroke =  '<F12>'
-let g:prompter_regenerate_keystroke =  '<F8>'
+"let g:prompter_regenerate_keystroke =  '<F8>'
 
 " immediate shortcut for PrompterSetup itself
 execute 'map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'
@@ -26,11 +26,11 @@ let g:prompter_completion_ctermfg = 0
 "        └── start/
 "            └── my_plugin/
 "                ├── plugin/
-"                │   ├── llm_playground.vim
+"                │   ├── prompter.vim
 "                │   └── ...
 "                └── python/
-"                    ├── openai_setup.py
-"                    ├── openai_completions.py
+"                    ├── llm.py
+"                    ├── utils.py
 "                    └── ...
 "
 let s:python_path = expand('<sfile>:p:h:h') . '/python'
@@ -40,40 +40,28 @@ python3 << EOF
 import vim
 import sys
 sys.path.append(vim.eval('s:python_path'))
-from openai_setup import CHAT_COMPLETION_MODE
+
 from vim_utils import echo, error
 from utils import model_settings, help
 
 echo(help())
+# print(vim.eval('s:python_path'))
 
 try:
-    llm_provider = vim.eval('g:llm_provider')
-    model_or_deployment = vim.eval('g:model_or_deployment')
-    completion_mode = vim.eval('g:completion_mode')
+    model = vim.eval('g:model')
     temperature = float(vim.eval('g:temperature'))
     max_tokens = int(vim.eval('g:max_tokens'))
     stop = vim.eval('g:stop')
+
+    echo('\nModel:')
+    echo(model_settings(model, temperature, max_tokens, stop))
+
+    echo('\nCommands:')
+    echo('PrompterGenerate   ' + vim.eval('g:prompter_generate_keystroke'))
+    echo('PrompterInfo       ' + vim.eval('g:prompter_info_keystroke'))
+    echo('PrompterSetup      ' + vim.eval('g:prompter_setup_keystroke'))
 except:
     error('prompter.vim setup not done! Run in command line :PrompterSetup')
-
-echo('\nModel:')
-echo(
-    model_settings(
-        llm_provider,
-        model_or_deployment,
-        completion_mode,
-        temperature,
-        max_tokens,
-        stop
-    )
-)
-
-echo('\nCommands:')
-echo('PrompterGenerate   ' + vim.eval('g:prompter_generate_keystroke'))
-echo('PrompterRegenerate ' + vim.eval('g:prompter_regenerate_keystroke'))
-echo('PrompterInfo       ' + vim.eval('g:prompter_info_keystroke'))
-echo('PrompterSetup      ' + vim.eval('g:prompter_setup_keystroke'))
-
 EOF
 endfunction
 
@@ -83,51 +71,28 @@ python3 << EOF
 import vim
 import sys
 sys.path.append(vim.eval('s:python_path'))
-from openai_setup import setup, CHAT_COMPLETION_MODE
 from vim_utils import info, error, progress
+
+import llm
+# from llm import MODEL, TEMPERATURE, MAX_TOKENS, STOP
 
 progress(f'configuring...')
 
 # set default key mappings
 vim.command("execute 'map ' . g:prompter_generate_keystroke . ' :PrompterGenerate<CR>'")
-vim.command("execute 'map ' . g:prompter_regenerate_keystroke . ' :PrompterRegenerate<CR>'")
 vim.command("execute 'map ' . g:prompter_info_keystroke . ' :PrompterInfo<CR>'")
 vim.command("execute 'map ' . g:prompter_setup_keystroke . ' :PrompterSetup<CR>'")
 
-global_defaults = None
+vim.command(f'let g:model = "{llm.MODEL}"')
+vim.command(f'let g:temperature = "{llm.TEMPERATURE}"')
+vim.command(f'let g:max_tokens = "{llm.MAX_TOKENS}"')
+vim.command(f'let g:stop = "{llm.STOP}"')
 
-try:
-    global_defaults = setup()
-except Exception as e:
-    error(e)
+info_text = f'Model: {llm.MODEL} Temperature: {llm.TEMPERATURE} Max_tokens: {llm.MAX_TOKENS}'
+if llm.STOP:
+    info_text += f' Stop: {llm.STOP}'
 
-if global_defaults:
-  vim.command(f'let g:llm_provider = "{global_defaults.llm_provider}"')
-  vim.command(f'let g:completion_mode = "{global_defaults.completion_mode}"')
-  vim.command(f'let g:temperature = "{global_defaults.temperature}"')
-  vim.command(f'let g:max_tokens = "{global_defaults.max_tokens}"')
-  vim.command(f'let g:stop = {global_defaults.stop}')
-
-  if global_defaults.completion_mode == CHAT_COMPLETION_MODE:
-      vim.command(f'let g:model_or_deployment = "{global_defaults.model_chat_completion}"')
-      info_text = (
-          f'Model: {global_defaults.llm_provider}/{global_defaults.model_chat_completion} '
-          f'completion mode: {global_defaults.completion_mode} '
-          f'temperature: {global_defaults.temperature} max_tokens: {global_defaults.max_tokens}'
-      )
-      if global_defaults.stop:
-          info_text += f' stop: {global_defaults.stop}'
-      info(info_text)
-  else:
-      vim.command(f'let g:model_or_deployment = "{global_defaults.model_text_completion}"')
-      info_text = (
-          f'Model: {global_defaults.llm_provider}/{global_defaults.model_text_completion} '
-          f'completion mode: {global_defaults.completion_mode} '
-          f'temperature: {global_defaults.temperature} max_tokens: {global_defaults.max_tokens}'
-      )
-      if global_defaults.stop:
-          info_text += f' stop: {global_defaults.stop}'
-      info(info_text)
+info(info_text)
 EOF
 endfunction
 
@@ -139,7 +104,7 @@ import sys
 sys.path.append(vim.eval('s:python_path'))
 from utils import model_settings
 from vim_utils import info, progress, error
-import openai_completions
+from llm import generate
 
 # take the current buffer as prompt
 # the buffer is a list of separated strings
@@ -149,9 +114,7 @@ prompt = '\n'.join(vim.current.buffer[:])
 prompt = prompt.strip()
 
 try:
-  llm_provider = vim.eval('g:llm_provider')
-  model_or_deployment = vim.eval('g:model_or_deployment')
-  completion_mode = vim.eval('g:completion_mode')
+  model = vim.eval('g:model')
   temperature = float(vim.eval('g:temperature'))
   max_tokens = int(vim.eval('g:max_tokens'))
   stop = vim.eval('g:stop')
@@ -164,26 +127,11 @@ except:
 if settings_available:
     #  show model settings as a work in progress message. 
     #  visible only if latency is greater than hundreds of millisecond 
-    #setting = model_settings(
-    #    llm_provider,
-    #    model_or_deployment,
-    #    completion_mode,
-    #    temperature,
-    #    max_tokens,
-    #    stop
-    #)
-    #progress(f'generating using: {setting}')
-    progress(f'generating...')
+    setting = model_settings(model, temperature, max_tokens, stop)
+    progress(f'generating using: {setting}')
+    # progress(f'generating...')
 
-    completion_text, completion_statistics = openai_completions.generate(
-        prompt,
-        llm_provider,
-        model_or_deployment,
-        completion_mode,
-        temperature,
-        max_tokens,
-        stop
-    )
+    completion_text, completion_statistics = generate(prompt, model, temperature, max_tokens, stop)
 
     # completion tokens are great than max_tokens 
     if 'length' in completion_statistics:
@@ -230,4 +178,4 @@ command! PrompterInfo call Info()
 command! PrompterGenerate call Generate()
 
 " TODO do not print process text :(
-command! PrompterRegenerate :execute 'normal u' | PrompterGenerate 
+" command! PrompterRegenerate :execute 'normal u' | PrompterGenerate

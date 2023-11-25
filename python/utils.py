@@ -2,7 +2,7 @@
 
 PLUGIN_NAME = 'prompter.vim'
 AUTHOR = 'giorgio.robino@gmail.com'
-VERSION = '0.1 (September 2nd, 2023)'
+VERSION = '0.2 (November 28, 2023)'
 
 
 def version():
@@ -23,9 +23,7 @@ def help():
 
 
 def model_settings(
-    llm_provider: str,
     model: str,
-    completion_mode: str,
     temperature: float,
     max_tokens: int,
     stop: [str],
@@ -33,12 +31,11 @@ def model_settings(
     ''' print the model configuration parameters, in one line '''
 
     info_text = (
-        f'Model: {llm_provider}/{model} '
-        f'completion mode: {completion_mode} '
-        f'temperature: {temperature} max_tokens: {max_tokens}'
+        f'Model: {model} '
+        f'Temperature: {temperature} Max_tokens: {max_tokens}'
     )
     if stop:
-        info_text += f' stop: {stop}'
+        info_text += f' Stop: {stop}'
 
     return info_text
 
@@ -115,9 +112,7 @@ if __name__ == '__main__':
     print()
 
     line = model_settings(
-        'azure',
-        'text-davinci-003',
-        'text',
+        'azure/text-davinci-003',
         0.4,
         2048,
         "a: u:"
@@ -127,9 +122,7 @@ if __name__ == '__main__':
     print()
 
     line = model_settings(
-        'azure',
-        'text-davinci-003',
-        'text',
+        'azure/text-davinci-003',
         0.4,
         2048,
         None

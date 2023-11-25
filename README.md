@@ -4,10 +4,13 @@ Use vim as a tool for efficiently design, debug and save your LLMs prompts.
 
 Transform the Vim editor into an efficient prompt engineering environment,
 effectively replacing proprietary providers Large Language Models (LLMs) web playgrounds like:
+[Azure OpenAI Service Playground](https://oai.azure.com/portal/) or [OpenAI Playground](https://platform.openai.com/playground).
 
-- [Azure OpenAI Service Playground](https://oai.azure.com/portal/)
-- [OpenAI Playground](https://platform.openai.com/playground)
-- Other platforms planned for inclusion in future versions of this plugin.
+Prompter.vim, from version 0.2, uses [LiteLLM](https://github.com/BerriAI/litellm) as a LLM provider abstraction layer!
+
+> LiteLLM calls all LLM APIs using the OpenAI format: 
+> Bedrock, Azure, OpenAI, Cohere, Anthropic, Ollama, Sagemaker, HuggingFace, Replicate (100+ LLMs).
+> So you can use prompter.vim with a vast list of different LLM providers!
 
 ## How it works 
 
@@ -33,6 +36,8 @@ intended for prompt engineers who want to test and debug natural language prompt
 
 ## Features
 
+- [x] Use any LLM**: 
+  through liteLLM as LLM abstarction layer, you can use a hughe list of different LLM provider.
 - [x] **Instant LLM Completion**: 
   trigger LLM completions with a simple keystroke.
 - [x] **Run-time statistics**:
@@ -40,7 +45,7 @@ intended for prompt engineers who want to test and debug natural language prompt
 - [x] **Expolit all editor commodities**:
   generate prompts whitin the editor and seamlessly save all your work to local files.
 - [x] **Completion Highlight**:
-  support completions color highlight.
+  support completions color highlight (experimental).
 
 ## Backstory
 
@@ -50,11 +55,10 @@ where you input your text prompt corpus and request a completion from a Large La
 
 My initial approach was to utilize the web playgrounds offered by LLM providers.
 However, I encountered numerous issues especially while interacting
-with Azure OpenAI web playgrounds.
+with [Azure OpenAI web playgrounds](https://oai.azure.com/portal/).
 
-For reasons I do not yet comprehend, 
-the web interaction on the Azure web playground slow down considerably after a
-certain point.I suspect a bug within the completion boxes. 
+For reasons I do not yet comprehend, the web interaction on the Azure web playground slow down considerably
+after a certain point.I suspect a bug within the completion boxes. 
 Furthermore, I am not fond of the Azure web interface for the "chat completion" mode.
 A total mess! Instead, the original OpenAI playground is better implemented, 
 and I did not encounter the aforementioned issues.
@@ -67,7 +71,7 @@ When you achieve certain (intermediate) noteworthy outcomes,
 you must copy all text boxes and save them in versioned files.
 
 Undertaking all of this with web playgrounds is a cumbersome and error-prone process.
-The final thought was: what if I could run my completion directly inside mt vim editor?
+The final thought was: what if I could run my completion directly inside my vim editor?
 
 
 ## 🙄 `text` completion or `chat` completion?
@@ -82,14 +86,11 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
   ```
                     ┌────────────────────────┐
                 ┌─  │                        │ ─┐
-                │   │                        │  │
-                │   │ bla bla bla            │  │
-                │   │ bla bla                │  │
-     context    │   │ bla bla bla bla        │  │ prompt
-     windows    │   │ bla                    │  │
-        =       │   │ bla bla                │  │
-      prompt    │   │                        │  │
-        +       │   │                        │  │
+     context    │   │ bla bla bla            │  │
+     window     │   │ bla bla                │  │
+        =       │   │ bla bla bla bla        │  │ prompt
+      prompt    │   │ bla                    │  │
+        +       │   │ bla bla                │  │
     completion  │   │                        │ ─┘
                 │   └────────────────────────┘
                 │               |
@@ -99,7 +100,7 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
                 │   ┌────────────────────────┐
                 │   │                        │ ─┐
                 │   │ bla bla                │  │ 
-                │   │ bla bla bla            │  │ completion
+                │   │ bla bla bla            │  │ text completion
                 │   │ bla                    │  │
                 └─  │                        │ ─┘
                     └────────────────────────┘
@@ -126,7 +127,7 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
         =       │   └────────────────────────┘
   system prompt │   ┌────────────────────────┐
         +       │   │ user: blablabla        │ ─┐
-   chat prompt  │   ├────────────────────────┤  │
+      chat      │   ├────────────────────────┤  │
         +       │   │ assistant: bla bla bla │  │
     completion  │   ├────────────────────────┤  │ chat
                 │   │ user: bla bla bla      │  │ prompt
@@ -141,7 +142,7 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
                 │               v
                 │   ┌────────────────────────┐
                 │   │                        │ ─┐
-                └─  │ assistant: bla bla bla │  │ completion
+                └─  │ assistant: bla bla bla │  │ chat completion
                     │                        │ ─┘
                     └────────────────────────┘
   ```
@@ -149,9 +150,9 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
 > ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 > avoiding the complications of the chat roles. 
 >
-> So a model that works only in chat mode (as the `gpt3.5-turbo`) is behind the scenes "simulates" 
-> to be a text completion model, just inserting the prompt text you are editing, as "system" role prompt.
-> See also this 
+> So a model that works only in chat mode (as the famous ChatGPT-like OpenAI `GPT3.5-Turbo`) is used, 
+> behind the scenes (through a LiteLLM `text_completion()` method), to "simulates" a text completion model, 
+> just inserting the prompt text you are editing, as "system" role prompt. See also: 
 > [discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
 >
 > I'm aware that using a chat-based model as a text-based model, as described above, 
@@ -167,10 +168,19 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
    vim --version | grep "+python3"
    ```
 
-2. Install Python module openai: 
+2. Install Python package litellm: 
    ```bash
-   pip install -U openai 
+   pip3.8 install -U litellm 
    ```
+
+   > IMPORTANT NOTE 
+   > check also which is the Python version wich is compiled vim. 
+   > If vim has been compiled with Python version `3.8`, 
+   > you must install `litellm` using `pip` of the corresponding Python version, e.g. `pip3.8`.
+   > Also remember that vim can ONLY use the Python version (and related packages) wich is compiled. 
+   > By example if your system Python current version (`python3 --version` == `Python 3.11.6`)
+   > differs from the vim python version, say `Python 3.8`, remember vim will see ONLY `Python 3.8` packages.
+   > To use `Python 3.11.6` packages, you must recompile vim.
 
 3. Install the plugin using your preferred plugin manager, 
    e.g. using vim-plug plug-in manager, insert in your `.vimrc` file:
@@ -181,55 +191,28 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
 
 ## 🔑 Environment Variables Setup 
 
-### OpenAI Provider
-In the example here below, you set the secret API key, the completion mode as `chat` and you specify the model to be used
-
 ```bash
-# MANDATORY SETTINGS: 
-# WARNING: KEEP YOU API KEY SECRETS.
-export AZURE_OPENAI_API_KEY="YOUR OPENAI API KEY"
+# PROVIDER DEPENDENT SETTINGS USING LiteLLM CONFIGURATION 
+# https://docs.litellm.ai/docs/providers
+# https://docs.litellm.ai/docs/providers/azure
 
-export OPENAI_COMPLETION_MODE="chat"
-export OPENAI_MODEL_NAME_CHAT_COMPLETION="gpt-3.5-turbo"
+# LLM PROVIDER MANDATORY SETTINGS
+export AZURE_API_VERSION=2023-09-01-preview
+export AZURE_API_BASE="https://XXXXXXXXXXXXXXX.openai.azure.com/"
+export AZURE_API_KEY="YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
 
-# export OPENAI_COMPLETION_MODE="text"
-# export OPENAI_MODEL_TEXT_COMPLETION="text-davinci-003"
+export MODEL="azure/your_deployment-name"
 
-# OPTIONAL SETTINGS
-export LLM_PROVIDER="openai"
-
-export OPENAI_TEMPERATURE=0.7
-export OPENAI_MAX_TOKENS=100
+# LLM PARAMETERS OPTIONAL SETTINGS
+# translated OpenAI model parameters 
+# https://docs.litellm.ai/docs/completion/input#translated-openai-params
+export TEMPERATURE=0.3
+export MAX_TOKENS=3000
 export OPENAI_STOP=""
 ```
 
-### Azure OpenAI Provider
-In the example here below, you set the secret API key, the completion mode as `chat` and you specify the model to be used.
-
-```bash
-# MANDATORY VARIABLES: 
-# WARNING: KEEP YOU API KEY SECRETS.
-
-export LLM_PROVIDER="azure"
-export AZURE_OPENAI_API_VERSION="2023-05-15"
-
-export AZURE_OPENAI_API_KEY="YOUR AZURE OPENAI API KEY"
-export AZURE_OPENAI_API_ENDPOINT="YOUR AZURE OPENAI ENDPOINT"
-
-export OPENAI_COMPLETION_MODE="chat"
-export AZURE_DEPLOYMENT_NAME_CHAT_COMPLETION="gpt-35-turbo"
-
-# export OPENAI_COMPLETION_MODE="text"
-# export AZURE_DEPLOYMENT_NAME_TEXT_COMPLETION="text-davinci-003"
-
-# OPTIONAL SETTINGS
-export OPENAI_TEMPERATURE=0.5
-export OPENAI_MAX_TOKENS=1000
-export OPENAI_STOP="a:"
-```
-
-> 💡 A good idea is to edit and keep all variables above in a hidden file, e.g. `vi ~/.prompter.vim`,
-> and execute it with `source ~/.prompter.vim`
+> 💡 A good idea is to edit and keep all variables above in a hidden file, 
+> e.g. `vi ~/.prompter_azure.vim`, and execute it with `source ~/.prompter_azure.vim`
 
 
 ## 👊 Commands
@@ -240,7 +223,6 @@ You can run commands in vim command mode (`:`) or the associated key:
 |----------------------|--------|-------------------------------------------|
 | `:PrompterSetup`     | `<F9>` | Model setup and initial configurations    |
 | `:PrompterGenerate`  | `<F12>`| Run the LLM text completion               |
-| `:PrompterRegenerate`| `<F8>` | Redo the LLM text completion              |
 | `:PrompterInfo`      | `<F10>`| Report current configuration              |
 
 ### `:PrompterSetup`
@@ -331,14 +313,13 @@ Reports the current plugin version, the list of plugin commands, the current mod
 the command print these info:
 ```
 Version:
-prompter.vim, by giorgio.robino@gmail.com, version 0.1 (September 2nd, 2023)
+prompter.vim, by giorgio.robino@gmail.com, version 0.2 (November 28, 2023)
 
 Model:
 Model: azure/gpt-35-turbo completion mode: chat temperature: 0.5 max_tokens: 1500
 
 Commands:
 PrompterGenerate   <F12>
-PrompterRegenerate <F8>
 PrompterInfo       <F10>
 PrompterSetup      <F9>
 ```
@@ -522,12 +503,13 @@ Other vim commands that could be useful:
    The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
    the variable placeholders, with the content of other buffers/windows.
 
-2. [ ] **Use LiteLLM as a LLM provider abstraction layer**
+2. [ ] Asyncronous LLM completion
 
-   So far prompter.vim support interface with Azure OpenAI or OpenAI native providers.
-
-   [LiteLLM](https://github.com/BerriAI/litellm) could be a better option to use openai API directly.
-   It is a lightweight package to simplify LLM API calls with Azure, OpenAI, Cohere, Anthropic, etc.
+   Currently, the  LLM completion command `PrompterGenerate` is a syncronous command: 
+   the editor is blocked untile the LLM API returns a completion text. 
+   It could be tedious for very complex and long prompts that require many many seconds to complete (e.g. >> 10).
+   In this cases it could be better if the command could be asyncrous, allowing the developer to use the vim editor
+   with the completion is on-going.
 
 3. [ ] **Streaming support**
 
