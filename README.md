@@ -1,25 +1,24 @@
 # prompter.vim
 
-Use vim as a tool for efficiently design, debug and save your LLMs prompts.
+Use vim as a tool for efficiently design and run, debug and save your Large Languege Models (LLMs) prompts.
 
-Transform the Vim editor into an efficient prompt engineering environment,
-effectively replacing proprietary providers Large Language Models (LLMs) web playgrounds like:
-[Azure OpenAI Service Playground](https://oai.azure.com/portal/) or [OpenAI Playground](https://platform.openai.com/playground).
+- Prompter.vim transforms the Vim editor into an efficient prompt engineering environment,
+  effectively replacing LLM proprietary providers web playgrounds like:
+  [Azure OpenAI Service Playground](https://oai.azure.com/portal/) or [OpenAI Playground](https://platform.openai.com/playground).
 
-Prompter.vim, from version 0.2, uses [LiteLLM](https://github.com/BerriAI/litellm) as a LLM provider abstraction layer!
-
-> LiteLLM calls all LLM APIs using the OpenAI format: 
-> Bedrock, Azure, OpenAI, Cohere, Anthropic, Ollama, Sagemaker, HuggingFace, Replicate (100+ LLMs).
-> So you can use prompter.vim with a vast list of different LLM providers!
+- Prompter.vim, from version 0.2, uses [LiteLLM](https://github.com/BerriAI/litellm) as a LLM provider abstraction layer. 
+  LiteLLM calls all LLM APIs using the OpenAI format: 
+  Bedrock, Azure, OpenAI, Cohere, Anthropic, Ollama, Sagemaker, HuggingFace, Replicate (100+ LLMs).
+  So you can use prompter.vim with a vast list of different LLM providers!
 
 ## How it works 
 
 1. Install and set your variable environment to configure model and settings
 2. Press `<F9>` (`:PrompterSetup`) 
 3. Edit your prompt
-4. Press `<F12>`  (`:Promptergenerate`) to get the LLM completion
-5. Goto step 3 to adjust your prompt
-6. Save your prompt (and completions) into a snapshot file
+4. Press `<F12>`  (`:PrompterGenerate`) to get the LLM completion
+5. Goto step 3 to maybe review your prompt
+6. Save your prompt (and completions) into a snapshot `.prompt` text file
 
 | ![demo screenshot](screens/screenshot.3.png) |
 |:--:|
@@ -27,8 +26,7 @@ Prompter.vim, from version 0.2, uses [LiteLLM](https://github.com/BerriAI/litell
 
 ## ⚠ A Tool for Prompt Engineers, Not Coders!
 
-prompter.vim is not primarily designed as a code completion tool, 
-although you can use it for that purpose. 
+Prompter.vim is not primarily designed as a code completion tool, although you can use it also for that purpose. 
 
 Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
 intended for prompt engineers who want to test and debug natural language prompts.
@@ -36,20 +34,21 @@ intended for prompt engineers who want to test and debug natural language prompt
 
 ## Features
 
-- [x] Use any LLM**: 
-  through liteLLM as LLM abstarction layer, you can use a hughe list of different LLM provider.
-- [x] **Instant LLM Completion**: 
+- [x] **Use almost all alvailable LLMs**  
+  Using liteLLM as a LLM abstarction layer, you can use a huge list of different LLM providers supported by LiteLLM.
+- [x] **Instant LLM Completion**  
   trigger LLM completions with a simple keystroke.
-- [x] **Run-time statistics**:
-  measure completions in terms of latency, used tokens, throughput, etc.
-- [x] **Expolit all editor commodities**:
-  generate prompts whitin the editor and seamlessly save all your work to local files.
-- [x] **Completion Highlight**:
-  support completions color highlight (experimental).
+- [x] **Run-time statistics**  
+  Measure completions in terms of latency, used tokens, throughput, etc.
+- [x] **Expolit all vim editor commodities (other plugins, etc.) **  
+  Generate prompts whitin the editor and seamlessly save all your work to local files.
+- [x] **Completion Highlight**  
+  Support basic completions color highlight
 
 ## Backstory
 
-The idea emerged while I was writing LLM prompts and experimenting with prompt engineering techniques. 
+The idea emerged  in the Spring 2023 while I was writing LLM prompts 
+and experimenting with prompt engineering techniques. 
 I was using a straightforward "text completion" approach, 
 where you input your text prompt corpus and request a completion from a Large Language Model (LLM).
 
@@ -58,12 +57,12 @@ However, I encountered numerous issues especially while interacting
 with [Azure OpenAI web playgrounds](https://oai.azure.com/portal/).
 
 For reasons I do not yet comprehend, the web interaction on the Azure web playground slow down considerably
-after a certain point.I suspect a bug within the completion boxes. 
+after a certain point. I suspect a bug within the completion boxes. 
 Furthermore, I am not fond of the Azure web interface for the "chat completion" mode.
-A total mess! Instead, the original OpenAI playground is better implemented, 
+A total mess! Instead, the original [OpenAI playground](https://platform.openai.com/playground) is better implemented, 
 and I did not encounter the aforementioned issues.
 
-Nevertheless, both web playgrounds permit only one prompt per browser tab.
+Nevertheless, both web playgrounds mentioned, permit only one prompt per browser tab.
 Therefore, when dealing with multiple active prompts (developing a composite
 application composed of nested/chained template prompts), 
 you must maintain multiple playgrounds open in distinct tabs.
@@ -147,43 +146,55 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
                     └────────────────────────┘
   ```
 
-> ⚠️ Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
-> avoiding the complications of the chat roles. 
->
-> So a model that works only in chat mode (as the famous ChatGPT-like OpenAI `GPT3.5-Turbo`) is used, 
-> behind the scenes (through a LiteLLM `text_completion()` method), to "simulates" a text completion model, 
-> just inserting the prompt text you are editing, as "system" role prompt. See also: 
-> [discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
->
-> I'm aware that using a chat-based model as a text-based model, as described above, 
-> is not the optimal usage, but it's a compromise between the simplicity of 
-> having a single text completion playground and the complexity of managing chat roles.
+⚠️ Warning  
+Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
+avoiding the complications of the chat roles. 
+
+So a model that works only in *chat* mode (as the famous ChatGPT-like OpenAI `GPT3.5-Turbo`) is used, 
+behind the scenes (through a LiteLLM `text_completion()` method), to "simulates" a text completion model, 
+just inserting the prompt text you are editing, as "system" role prompt. See also: 
+[discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
+
+I'm aware that using a chat-based model as a text-based model, as described above, 
+is not the optimal usage, but it's a compromise between the simplicity of 
+having a single text completion playground and the complexity of managing chat roles.
 
 
 ## 📦 Install
 
-1. This pluguin is made in Python3. Check if your vim installation support Python3: 
+1. This pluguin is made in Python3. 
+   Check if your vim installation support Python3: 
 
    ```bash
-   vim --version | grep "+python3"
+   vim --version | grep "+python3" | awk '{print $3}'
    ```
 
-2. Install Python package litellm: 
+   In my case I got `+python3`. That's the main prerequisite.
+
+2. Check also which is the Python version wich is compiled vim. 
+   Extract the precise Python version with command: 
+
+   ```bash
+   vim --version | grep -o -P '(?<=/python)[0-9]+\.[0-9]+'
+   ```
+
+   In my case I got `3.8`. 
+
+   Note that vim can ONLY use the Python version (and related packages) wich is compiled.
+   By example if your system Python current version (`python3 --version` == `Python 3.11.6`)
+   differs from the vim python version, say `Python 3.8`, remember vim will see ONLY `Python 3.8` packages.
+   To use `Python 3.11.6` packages, you must recompile vim.
+
+3. Install Python package litellm.
+   You must install `litellm` using `pip` of the corresponding Python version, e.g. `pip3.8`.
+
    ```bash
    pip3.8 install -U litellm 
    ```
 
-   > IMPORTANT NOTE 
-   > check also which is the Python version wich is compiled vim. 
-   > If vim has been compiled with Python version `3.8`, 
-   > you must install `litellm` using `pip` of the corresponding Python version, e.g. `pip3.8`.
-   > Also remember that vim can ONLY use the Python version (and related packages) wich is compiled. 
-   > By example if your system Python current version (`python3 --version` == `Python 3.11.6`)
-   > differs from the vim python version, say `Python 3.8`, remember vim will see ONLY `Python 3.8` packages.
-   > To use `Python 3.11.6` packages, you must recompile vim.
-
-3. Install the plugin using your preferred plugin manager, 
+4. Install the plugin using your preferred plugin manager, 
    e.g. using vim-plug plug-in manager, insert in your `.vimrc` file:
+
    ```viml
    Plug 'solyarisoftware/prompter.vim'
    ```
@@ -211,8 +222,8 @@ export MAX_TOKENS=3000
 export OPENAI_STOP=""
 ```
 
-> 💡 A good idea is to edit and keep all variables above in a hidden file, 
-> e.g. `vi ~/.prompter_azure.vim`, and execute it with `source ~/.prompter_azure.vim`
+💡 A good idea is to edit and keep all variables above in a hidden file, 
+e.g. `vi ~/.prompter_azure.vim`, and execute it with `source ~/.prompter_azure.vim`
 
 
 ## 👊 Commands
@@ -469,15 +480,22 @@ Other vim commands that could be useful:
 
 - [x] Vim version: VIM - Vi IMproved 9.0
 - [x] I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
-- [x] I tested the plugin using both Python 3.8.10 and 3.11
-- [x] As LLM provider, I tested just using my Azure OpenAI account.
+- [x] I tested the plugin using Python 3.8.10
+- [x] As LLM provider, I tested only my Azure OpenAI account (through LiteLLM library).
 - [ ] I din't tested using an OpenAI account.
 
 
+## Change log
+- Version 0.1  
+  First release. Only OpenAI/Azure OpenAI models are supported via openai version 0.28 Python module.
+
+- Version 0.2  
+  LLMs completions are done through LiteLLM, LLMs abstraction layer python package, 
+  allowing to use a moltitude of different LLM providers. 
+
 ## Features to do in future releases
 
-1. [ ] **Support template prompts**
-
+1. [ ] **Support template prompts**  
    You are designing "template prompts"
    comprised of various parts that can be dynamically constructed at run-time.
    Consider, for instance, that you wish to prototype a "template prompt"
@@ -503,20 +521,19 @@ Other vim commands that could be useful:
    The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
    the variable placeholders, with the content of other buffers/windows.
 
-2. [ ] Asyncronous LLM completion
-
+2. [ ] **Asyncronous LLM completion**  
    Currently, the  LLM completion command `PrompterGenerate` is a syncronous command: 
    the editor is blocked untile the LLM API returns a completion text. 
    It could be tedious for very complex and long prompts that require many many seconds to complete (e.g. >> 10).
    In this cases it could be better if the command could be asyncrous, allowing the developer to use the vim editor
    with the completion is on-going.
 
-3. [ ] **Streaming support**
-
+3. [ ] **Streaming support**  
    So far streaming completion is not take in consideration. 
 
 
 ## Known issues
+
 - in command Promptergenerate, some characters (to be defined) broke the highlight matchadd regexp. 
   This imply that highlight doesn't work and/or a runtime error is gtenerated. 
   Nevertheless the generation is done. To be investigated.
@@ -542,6 +559,9 @@ Other vim commands that could be useful:
 - [Vivian De Smedt](https://vi.stackexchange.com/users/23502/vivian-de-smedt) 
   vim expert for his help solving an [issue](https://vi.stackexchange.com/questions/43001/how-can-i-match-a-regexp-containing-newlines/43002#43002)
   encountered when developing this plugin.
+
+ - [LiteLLM creators](https://github.com/BerriAI/litellm) for having integrated some [suggested features](https://github.com/BerriAI/litellm/issues?q=solyarisoftware), as the [Text Completion Format](https://docs.litellm.ai/docs/tutorials/text_completion)!
+
 
 ## 🙏 Status / How to contribute
 
