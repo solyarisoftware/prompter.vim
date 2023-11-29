@@ -6,7 +6,7 @@ Use vim as a tool for efficiently design and run, debug and save your Large Lang
   effectively replacing LLM proprietary providers web playgrounds like:
   [Azure OpenAI Service Playground](https://oai.azure.com/portal/) or [OpenAI Playground](https://platform.openai.com/playground).
 
-- Prompter.vim, from version 0.2, uses [LiteLLM](https://github.com/BerriAI/litellm) as a LLM provider abstraction layer. 
+- From version 0.2, the plugin uses [LiteLLM](https://github.com/BerriAI/litellm) as a LLM provider abstraction layer.  
   LiteLLM calls all LLM APIs using the OpenAI format: 
   Bedrock, Azure, OpenAI, Cohere, Anthropic, Ollama, Sagemaker, HuggingFace, Replicate (100+ LLMs).
   So you can use prompter.vim with a vast list of different LLM providers!
@@ -14,11 +14,11 @@ Use vim as a tool for efficiently design and run, debug and save your Large Lang
 ## How it works 
 
 1. Install and set your variable environment to configure model and settings
-2. Press `<F9>` (`:PrompterSetup`) 
+2. Press `<F9>` (key shortcut for `:PrompterSetup`) 
 3. Edit your prompt
-4. Press `<F12>`  (`:PrompterGenerate`) to get the LLM completion
+4. Press `<F12>`  (key shortcut for `:PrompterGenerate`) to get the LLM completion
 5. Goto step 3 to maybe review your prompt
-6. Save your prompt (and completions) into a snapshot `.prompt` text file
+6. Save your prompt (and completions) into a snapshot text file (e.g. `myexperiment.prompt`)
 
 | ![demo screenshot](screens/screenshot.3.png) |
 |:--:|
@@ -26,8 +26,7 @@ Use vim as a tool for efficiently design and run, debug and save your Large Lang
 
 ## ⚠ A Tool for Prompt Engineers, Not Coders!
 
-Prompter.vim is not primarily designed as a code completion tool, although you can use it also for that purpose. 
-
+Prompter.vim is not primarily designed as a code completion tool, although you can use it also for that purpose.   
 Instead, this plugin aims to be a general-purpose replacement for web text completion playgrounds, 
 intended for prompt engineers who want to test and debug natural language prompts.
 
@@ -73,7 +72,7 @@ Undertaking all of this with web playgrounds is a cumbersome and error-prone pro
 The final thought was: what if I could run my completion directly inside my vim editor?
 
 
-## 🙄 `text` completion or `chat` completion?
+## 🙄 `text` or `chat` completion?
 There are two common "completion modes" foreseen in OpenAI or similar current LLMs:
 
 - **`text` completion**
@@ -150,15 +149,16 @@ There are two common "completion modes" foreseen in OpenAI or similar current LL
 Prompter.vim plugin is conceived to work as text completer fast prototyping playground, 
 avoiding the complications of the chat roles. 
 
-So a model that works only in *chat* mode (as the famous ChatGPT-like OpenAI `GPT3.5-Turbo`) is used, 
-behind the scenes (through a LiteLLM `text_completion()` method), to "simulates" a text completion model, 
-just inserting the prompt text you are editing, as "system" role prompt. See also: 
+So if a model that works only in *chat* mode (e.g. OpenAI `GPT3.5-Turbo`) is used, 
+behind the scenes (through a LiteLLM `text_completion()` method) the editor text content (the prompt) 
+is inserted as "system" role prompt. See also: 
 [discussion](https://community.openai.com/t/achieving-text-completion-with-gpt-3-5-or-gpt-4-best-practices-using-azure-deployment/321503).
 
-I'm aware that using a chat-based model as a text-based model, as described above, 
-is not the optimal usage, but it's a compromise between the simplicity of 
-having a single text completion playground and the complexity of managing chat roles.
-
+>
+> I'm aware that using a chat-based model as a text-based model, as described above, 
+> is not the optimal usage, but it's a compromise between the simplicity of 
+> having a single text completion playground and the complexity of managing chat roles.
+>
 
 ## 📦 Install
 
@@ -175,140 +175,140 @@ having a single text completion playground and the complexity of managing chat r
    Extract the precise Python version with command: 
 
    ```bash
-   vim --version | grep -o -P '(?<=/python)[0-9]+\.[0-9]+'
-   ```
+     vim --version | grep -o -P '(?<=/python)[0-9]+\.[0-9]+'
+     ```
 
-   In my case I got `3.8`. 
+     In my case I got `3.8`. 
 
-   Note that vim can ONLY use the Python version (and related packages) wich is compiled.
-   By example if your system Python current version (`python3 --version` == `Python 3.11.6`)
-   differs from the vim python version, say `Python 3.8`, remember vim will see ONLY `Python 3.8` packages.
-   To use `Python 3.11.6` packages, you must recompile vim.
+     > Note that vim can ONLY use the Python version (and related packages) wich is compiled.
+     > By example if your system Python current version (`python3 --version` == `Python 3.11.6`)
+     > differs from the vim python version, say `Python 3.8`, remember vim will see ONLY `Python 3.8` packages.
+     > To use `Python 3.11.6` packages, you must recompile vim.
 
-3. Install Python package litellm.
-   You must install `litellm` using `pip` of the corresponding Python version, e.g. `pip3.8`.
+  3. Install Python package litellm.
+     You must install `litellm` using `pip` of the corresponding Python version, e.g. `pip3.8`.
 
-   ```bash
-   pip3.8 install -U litellm 
-   ```
+     ```bash
+     pip3.8 install -U litellm 
+     ```
 
-4. Install the plugin using your preferred plugin manager, 
-   e.g. using vim-plug plug-in manager, insert in your `.vimrc` file:
+  4. Install the plugin using your preferred plugin manager, 
+     e.g. using vim-plug plug-in manager, insert in your `.vimrc` file:
 
-   ```viml
-   Plug 'solyarisoftware/prompter.vim'
-   ```
-
-
-## 🔑 Environment Variables Setup 
-
-```bash
-# PROVIDER DEPENDENT SETTINGS USING LiteLLM CONFIGURATION 
-# https://docs.litellm.ai/docs/providers
-# https://docs.litellm.ai/docs/providers/azure
-
-# LLM PROVIDER MANDATORY SETTINGS
-export AZURE_API_VERSION=2023-09-01-preview
-export AZURE_API_BASE="https://XXXXXXXXXXXXXXX.openai.azure.com/"
-export AZURE_API_KEY="YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
-
-export MODEL="azure/your_deployment-name"
-
-# LLM PARAMETERS OPTIONAL SETTINGS
-# translated OpenAI model parameters 
-# https://docs.litellm.ai/docs/completion/input#translated-openai-params
-export TEMPERATURE=0.3
-export MAX_TOKENS=3000
-export OPENAI_STOP=""
-```
-
-💡 A good idea is to edit and keep all variables above in a hidden file, 
-e.g. `vi ~/.prompter_azure.vim`, and execute it with `source ~/.prompter_azure.vim`
+     ```viml
+     Plug 'solyarisoftware/prompter.vim'
+     ```
 
 
-## 👊 Commands
+  ## 🔑 Environment Variables Setup 
 
-You can run commands in vim command mode (`:`) or the associated key:
+  ```bash
+  # PROVIDER DEPENDENT SETTINGS USING LiteLLM CONFIGURATION 
+  # https://docs.litellm.ai/docs/providers
+  # https://docs.litellm.ai/docs/providers/azure
 
-| Command              | Key 🚀 | Action                                    |
-|----------------------|--------|-------------------------------------------|
-| `:PrompterSetup`     | `<F9>` | Model setup and initial configurations    |
-| `:PrompterGenerate`  | `<F12>`| Run the LLM text completion               |
-| `:PrompterInfo`      | `<F10>`| Report current configuration              |
+  # LLM PROVIDER MANDATORY SETTINGS
+  export AZURE_API_VERSION=2023-09-01-preview
+  export AZURE_API_BASE="https://XXXXXXXXXXXXXXX.openai.azure.com/"
+  export AZURE_API_KEY="YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY"
 
-### `:PrompterSetup`
+  export MODEL="azure/your_deployment-name"
 
-When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
-```viml
-:PrompterSetup
-```
-Following the environment settings, if successful, the command print in the status line the model configurations:
-```
-Model: azure/gpt-35-turbo completion mode: chat temperature: 0.7 max_tokens: 100
-```
-Explanation of values in the status line report:
-```
-                               temperature preset value ───────────────────────────┐
-                                                                                   │
-                                max_tokens preset value ──────────┐                │
-                                                                  │                │
-      ┌─────┐ ┌────────────┐                 ┌────┐             ┌─┴─┐            ┌─┴─┐
-Model:│azure│/│gpt-35-turbo│ completion mode:│chat│ temperature:│0.7│ max_tokens:│100│
-      └──┬──┘ └─────┬──────┘                 └──┬─┘             └───┘            └───┘
-         │          │                           │
-         │          │                           └─ chat or text, depending on the model
-         │          │
-         │          └── name of the Azure deployment
-         │
-         └───────────── name of the LLM provider
-```
+  # LLM PARAMETERS OPTIONAL SETTINGS
+  # translated OpenAI model parameters 
+  # https://docs.litellm.ai/docs/completion/input#translated-openai-params
+  export TEMPERATURE=0.3
+  export MAX_TOKENS=3000
+  export OPENAI_STOP=""
+  ```
 
-### `:PrompterGenerate`
+  💡 A good idea is to edit and keep all variables above in a hidden file, 
+  e.g. `vi ~/.prompter_azure.vim`, and execute it with `source ~/.prompter_azure.vim`
 
-Edit your prompt on a vim windows, and to run the LLM completion just  
-```viml
-:PrompterGenerate
-```
-The status line report some statistics:
 
-```
-Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
-```
+  ## 👊 Commands
 
-Explanation of values in the status line report:
-```
-          ┌─ latency in milliseconds and seconds
-          │
-          │                     ┌───────────────────────────────── total nr. of tokens
-          │                     │
-          │                     │            ┌──────────────────── nr. of tokens in prompt
-          │                     │            │
-          │                     │            │               ┌──── nr. of tokens in completion
-          │                     │            │               │
-        ┌─┴───────────┐       ┌─┴─┐        ┌─┴─┐           ┌─┴┐             ┌───┐      ┌──┐      ┌───┐       ┌─┐
-Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│) Throughput:│154│Words:│28│Chars:│176│ Lines:│7│
-        └─────────────┘       └───┘        └───┘           └──┘             └─┬─┘      └─┬┘      └─┬─┘       └┬┘
-                                                                              │          │         │          │
-                                                                              │          │         │          │
-                                      Latency / Tokens ───────────────────────┘          │         │          │
-                                                                                         │         │          │
-                                                                 nr. of words ───────────┘         │          │
-                                                                                                   │          │
-                                                            nr. of characters ─────────────────────┘          │
-                                                                                                              │
-                                                                 nr. of lines ────────────────────────────────┘
-```
+  You can run commands in vim command mode (`:`) or the associated key:
 
-The statistics reports these metrics:
+  | Command              | Key 🚀 | Action                                    |
+  |----------------------|--------|-------------------------------------------|
+  | `:PrompterSetup`     | `<F9>` | Model setup and initial configurations    |
+  | `:PrompterGenerate`  | `<F12>`| Run the LLM text completion               |
+  | `:PrompterInfo`      | `<F10>`| Report current configuration              |
 
-| Metric     | Description                                                    | Example            |
-|------------|----------------------------------------------------------------|--------------------|
-| Latency    | Bot in milliseconds and second approximation                   | `1480ms (1.5s)`    |
-| Tokens     | Total tokens amount, prompt subtotal, and completion subtotal  | `228`              |
-| Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`              |
-| Words      | Number of words generated in the completion                    | `28`               |
-| Chars      | Number of characters in the completion                         | `176`              |
-| Lines      | Number of lines generated in the completion                    | `7`                |
+  ### `:PrompterSetup`
+
+  When you enter vim, to activate the Prompter playground environment, first of all run in command mode:
+  ```viml
+  :PrompterSetup
+  ```
+  Following the environment settings, if successful, the command print in the status line the model configurations:
+  ```
+  Model: azure/gpt-35-turbo completion mode: chat temperature: 0.7 max_tokens: 100
+  ```
+  Explanation of values in the status line report:
+  ```
+                                 temperature preset value ───────────────────────────┐
+                                                                                     │
+                                  max_tokens preset value ──────────┐                │
+                                                                    │                │
+        ┌─────┐ ┌────────────┐                 ┌────┐             ┌─┴─┐            ┌─┴─┐
+  Model:│azure│/│gpt-35-turbo│ completion mode:│chat│ temperature:│0.7│ max_tokens:│100│
+        └──┬──┘ └─────┬──────┘                 └──┬─┘             └───┘            └───┘
+           │          │                           │
+           │          │                           └─ chat or text, depending on the model
+           │          │
+           │          └── name of the Azure deployment
+           │
+           └───────────── name of the LLM provider
+  ```
+
+  ### `:PrompterGenerate`
+
+  Edit your prompt on a vim windows, and to run the LLM completion just  
+  ```viml
+  :PrompterGenerate
+  ```
+  The status line report some statistics:
+
+  ```
+  Latency: 1480ms (1.5s) Tokens: 228 (prompt: 167 completion: 61) Throughput: 154 Words: 28 Chars: 176, Lines: 7
+  ```
+
+  Explanation of values in the status line report:
+  ```
+            ┌─ latency in milliseconds and seconds
+            │
+            │                     ┌───────────────────────────────── total nr. of tokens
+            │                     │
+            │                     │            ┌──────────────────── nr. of tokens in prompt
+            │                     │            │
+            │                     │            │               ┌──── nr. of tokens in completion
+            │                     │            │               │
+          ┌─┴───────────┐       ┌─┴─┐        ┌─┴─┐           ┌─┴┐             ┌───┐      ┌──┐      ┌───┐       ┌─┐
+  Latency:│1480ms (1.5s)│Tokens:│228│(prompt:│167│completion:│61│) Throughput:│154│Words:│28│Chars:│176│ Lines:│7│
+          └─────────────┘       └───┘        └───┘           └──┘             └─┬─┘      └─┬┘      └─┬─┘       └┬┘
+                                                                                │          │         │          │
+                                                                                │          │         │          │
+                                        Latency / Tokens ───────────────────────┘          │         │          │
+                                                                                           │         │          │
+                                                                   nr. of words ───────────┘         │          │
+                                                                                                     │          │
+                                                              nr. of characters ─────────────────────┘          │
+                                                                                                                │
+                                                                   nr. of lines ────────────────────────────────┘
+  ```
+
+  The statistics reports these metrics:
+
+  | Metric     | Description                                                    | Example            |
+  |------------|----------------------------------------------------------------|--------------------|
+  | Latency    | Bot in milliseconds and second approximation                   | `1480ms (1.5s)`    |
+  | Tokens     | Total tokens amount, prompt subtotal, and completion subtotal  | `228`              |
+  | Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`              |
+  | Words      | Number of words generated in the completion                    | `28`               |
+  | Chars      | Number of characters in the completion                         | `176`              |
+  | Lines      | Number of lines generated in the completion                    | `7`                |
 
 > By default the command is assigned to the function key `F12`. 
 > In such a way you can run the completion just pressing the single keystroke `F12`.
@@ -480,9 +480,9 @@ Other vim commands that could be useful:
 
 - [x] Vim version: VIM - Vi IMproved 9.0
 - [x] I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
-- [x] I tested the plugin using Python 3.8.10
+- [x] I tested the plugin using (vim compiled for) Python 3.8.10
 - [x] As LLM provider, I tested only my Azure OpenAI account (through LiteLLM library).
-- [ ] I din't tested using an OpenAI account.
+- [ ] I din't tested using an OpenAI account or other LLMs.
 
 
 ## Change log
@@ -495,41 +495,45 @@ Other vim commands that could be useful:
 
 ## Features to do in future releases
 
-1. [ ] **Support template prompts**  
-   You are designing "template prompts"
-   comprised of various parts that can be dynamically constructed at run-time.
-   Consider, for instance, that you wish to prototype a "template prompt"
-   containing placeholder variables, that are references to certain variables
-   filled by other prompts or files, like so:
+- [ ] **Support all LLM input parameters**  
+  So far prompter.vim support only `temperature`, `max_tokens`, `stop` arguments.  
+  LiteLLM accepts and translates the [OpenAI Chat Completion params](https://docs.litellm.ai/docs/completion/input#common-params) across all providers. 
+  
+- [ ] **Support template prompts**  
+  You are designing "template prompts"
+  comprised of various parts that can be dynamically constructed at run-time.
+  Consider, for instance, that you wish to prototype a "template prompt"
+  containing placeholder variables, that are references to certain variables
+  filled by other prompts or files, like so:
  
-   ```
-   TASK
-   {some_task_description}
+  ```
+  TASK
+  {some_task_description}
 
-   DATA
-   {some_yaml}
+  DATA
+  {some_yaml}
 
-   DIALOG
-   {dialog_history}
-   ```
+  DIALOG
+  {dialog_history}
+  ```
 
-   In the example above, when using web playgrounds, you function as a copy-paste intermediary. 
-   You are required to open four web tabs, execute text completions in each, 
-   and finally manually paste completions, substituting variables such as `{some_data}`, `{dialog_history}`. 
-   Additionally, you might need to load a file into a variable, like `{some_yaml}`.
+  In the example above, when using web playgrounds, you function as a copy-paste intermediary. 
+  You are required to open four web tabs, execute text completions in each, 
+  and finally manually paste completions, substituting variables such as `{some_data}`, `{dialog_history}`. 
+  Additionally, you might need to load a file into a variable, like `{some_yaml}`.
 
-   The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
-   the variable placeholders, with the content of other buffers/windows.
+  The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
+  the variable placeholders, with the content of other buffers/windows.
 
-2. [ ] **Asyncronous LLM completion**  
-   Currently, the  LLM completion command `PrompterGenerate` is a syncronous command: 
-   the editor is blocked untile the LLM API returns a completion text. 
-   It could be tedious for very complex and long prompts that require many many seconds to complete (e.g. >> 10).
-   In this cases it could be better if the command could be asyncrous, allowing the developer to use the vim editor
-   with the completion is on-going.
+- [ ] **Asyncronous LLM completion**  
+  Currently, the  LLM completion command `PrompterGenerate` is a syncronous command: 
+  the editor is blocked untile the LLM API returns a completion text. 
+  It could be tedious for very complex and long prompts that require many many seconds to complete (e.g. >> 10).
+  In this cases it could be better if the command could be asyncrous, allowing the developer to use the vim editor
+  with the completion is on-going.
 
-3. [ ] **Streaming support**  
-   So far streaming completion is not take in consideration. 
+- [ ] **Streaming support**  
+  So far streaming completion is not take in consideration. 
 
 
 ## Known issues
