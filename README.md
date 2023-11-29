@@ -1,6 +1,6 @@
 # prompter.vim
 
-Use vim as a tool for efficiently design and run, debug and save your Large Languege Models (LLMs) prompts.
+Use vim as a tool for efficiently design and run, debug and save your Large Language Models (LLMs) prompts.
 
 - Prompter.vim transforms the Vim editor into an efficient prompt engineering environment,
   effectively replacing LLM proprietary providers web playgrounds like:
@@ -22,7 +22,7 @@ Use vim as a tool for efficiently design and run, debug and save your Large Lang
 
 | ![demo screenshot](screens/screenshot.3.png) |
 |:--:|
-| prompter.vim in action: editing/interacting with a prompt that simulate a phone conversation (with a tecnique below described as "dialogues as part of the text prompt")|
+| prompter.vim in action: editing/interacting with a prompt that simulate a phone conversation (with a technique below described as "dialogues as part of the text prompt")|
 
 ## ⚠ A Tool for Prompt Engineers, Not Coders!
 
@@ -33,14 +33,14 @@ intended for prompt engineers who want to test and debug natural language prompt
 
 ## Features
 
-- [x] **Use almost all alvailable LLMs**  
-  Using liteLLM as a LLM abstarction layer, you can use a huge list of different LLM providers supported by LiteLLM.
+- [x] **Use almost all available LLMs**  
+  Using LiteLLM as a LLM abstraction layer, you can use a huge list of different LLM providers supported by LiteLLM.
 - [x] **Instant LLM Completion**  
   trigger LLM completions with a simple keystroke.
 - [x] **Run-time statistics**  
   Measure completions in terms of latency, used tokens, throughput, etc.
-- [x] **Expolit all vim editor commodities (other plugins, etc.) **  
-  Generate prompts whitin the editor and seamlessly save all your work to local files.
+- [x] **Exploit all vim editor commodities (other plugins, etc.)**  
+  Generate prompts inside the editor and seamlessly save all your work to local files.
 - [x] **Completion Highlight**  
   Support basic completions color highlight
 
@@ -162,7 +162,7 @@ is inserted as "system" role prompt. See also:
 
 ## 📦 Install
 
-1. This pluguin is made in Python3. 
+1. This plugin is made in Python3. 
    Check if your vim installation support Python3: 
 
    ```bash
@@ -171,7 +171,7 @@ is inserted as "system" role prompt. See also:
 
    In my case I got `+python3`. That's the main prerequisite.
 
-2. Check also which is the Python version wich is compiled vim. 
+2. Check also which is the Python version which is compiled vim. 
    Extract the precise Python version with command: 
 
    ```bash
@@ -185,7 +185,7 @@ is inserted as "system" role prompt. See also:
      > differs from the vim python version, say `Python 3.8`, remember vim will see ONLY `Python 3.8` packages.
      > To use `Python 3.11.6` packages, you must recompile vim.
 
-  3. Install Python package litellm.
+  3. Install Python package `litellm`.
      You must install `litellm` using `pip` of the corresponding Python version, e.g. `pip3.8`.
 
      ```bash
@@ -305,7 +305,7 @@ is inserted as "system" role prompt. See also:
   |------------|----------------------------------------------------------------|--------------------|
   | Latency    | Bot in milliseconds and second approximation                   | `1480ms (1.5s)`    |
   | Tokens     | Total tokens amount, prompt subtotal, and completion subtotal  | `228`              |
-  | Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughtput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`              |
+  | Throughput | Completion Tokens / latency ratio (in seconds). See discussion about the concept of throughput [here](https://github.com/BerriAI/litellm/issues/306)                | `154`              |
   | Words      | Number of words generated in the completion                    | `28`               |
   | Chars      | Number of characters in the completion                         | `176`              |
   | Lines      | Number of lines generated in the completion                    | `7`                |
@@ -388,9 +388,9 @@ PrompterSetup      <F9>
   I many time experienced that LLM completion worst if you mistake just a verb.
 
   Things go even worst if you are writing prompts in more than one languages.
-  personally I usually write conversational prompts in English, for some reasons described in my article
+  Personally I usually write conversational prompts in English, for some reasons described in my article
   [Non-English Languages Prompt Engineering Trade-offs](https://convcomp.it/non-english-languages-prompt-engineering-trade-offs-7e529866faba),
-  but the target langugae of the chat prompt is my native language: Italian. 
+  but the target language of the chat prompt is my native language: Italian. 
   All in all the prompt contains text in both English and Italian. In this case I run this small vimscript function:
 
   ```viml
@@ -402,7 +402,7 @@ PrompterSetup      <F9>
   com! SPELL call Spell()
   ```
 
-- Read all your previous completion statisctics
+- Read all your previous completion statistics
 
   ```viml
   messages
@@ -416,11 +416,11 @@ PrompterSetup      <F9>
 
 - Enabling lines soft wrap
 
-  I usually work with a full-screen vim setting. That helps mme to maximize my attention.
-  Nevertheless having very long lines (after a `PrompterGenerate`) doen't help the reading.  
+  I usually work with a full-screen vim setting. That helps me to maximize my attention.
+  Nevertheless having very long lines (after a `PrompterGenerate`) doesn't help the reading.  
   Unfortunately, in vim is not easy to configure a fixed column width soft wrap. 
   See [discussion](https://vi.stackexchange.com/questions/43028/how-to-soft-wrap-text-at-column-number-lower-than-window-width).
-  You can set set soft warp with follwing command:
+  You can set set soft warp with following command:
   ```viml
   set wrap linebreak nolist
   ```
@@ -429,7 +429,7 @@ PrompterSetup      <F9>
 ## 💡 Dialogues as part of the text prompt
 
 A technique I'm using to prototype dialog prompts, is to insert a dialog turns block 
-as in the follwing example, where the dialog block terminates with the "stop sequence" (e.g. `a:`)
+as in the following example, where the dialog block terminates with the "stop sequence" (e.g. `a:`)
 triggering LLM to complete the assistant role:
 
 ```
@@ -461,7 +461,7 @@ let g:stop = ['u:']
 
 💡 Please note if you do not set the stop sequence as described above,
 the LLM will try to complete the entire conversation. 
-Taht's in general not wanted because you want to write the sentence following `u:`.
+This is in general not wanted because you want to write the sentence following `u:`.
 Nevertheless it's sometime useful to unset the `g:stop` 
 just to see how the LLM imagine the conversation flow. 
 
@@ -482,16 +482,16 @@ Other vim commands that could be useful:
 - [x] I developed on WLS (Window Linux Subsystem) on a Windows 10 operating system, using an Ubuntu 20.04 distribution.
 - [x] I tested the plugin using (vim compiled for) Python 3.8.10
 - [x] As LLM provider, I tested only my Azure OpenAI account (through LiteLLM library).
-- [ ] I din't tested using an OpenAI account or other LLMs.
+- [ ] I didn't tested using an OpenAI account or other LLMs.
 
 
 ## Change log
 - Version 0.1  
-  First release. Only OpenAI/Azure OpenAI models are supported via openai version 0.28 Python module.
+  First release. Only OpenAI/Azure OpenAI models are supported via OpenAI version 0.28 Python module.
 
 - Version 0.2  
   LLMs completions are done through LiteLLM, LLMs abstraction layer python package, 
-  allowing to use a moltitude of different LLM providers. 
+  allowing to use a multitude of different LLM providers. 
 
 ## Features to do in future releases
 
@@ -525,11 +525,11 @@ Other vim commands that could be useful:
   The idea is to support template prompts editing allowing to replace on the fly (with a keystroke) 
   the variable placeholders, with the content of other buffers/windows.
 
-- [ ] **Asyncronous LLM completion**  
-  Currently, the  LLM completion command `PrompterGenerate` is a syncronous command: 
-  the editor is blocked untile the LLM API returns a completion text. 
+- [ ] **Asynchronous LLM completion**  
+  Currently, the  LLM completion command `PrompterGenerate` is a synchronous command: 
+  the editor is blocked until the LLM API returns a completion text. 
   It could be tedious for very complex and long prompts that require many many seconds to complete (e.g. >> 10).
-  In this cases it could be better if the command could be asyncrous, allowing the developer to use the vim editor
+  In this cases it could be better if the command could be asynchrous, allowing the developer to use the vim editor
   with the completion is on-going.
 
 - [ ] **Streaming support**  
@@ -539,7 +539,7 @@ Other vim commands that could be useful:
 ## Known issues
 
 - in command Promptergenerate, some characters (to be defined) broke the highlight matchadd regexp. 
-  This imply that highlight doesn't work and/or a runtime error is gtenerated. 
+  This imply that highlight doesn't work and/or a runtime error is generated. 
   Nevertheless the generation is done. To be investigated.
 
 
